@@ -1,0 +1,1923 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Guia de Estudos em C · Fatec Mogi</title>
+<meta name="description" content="Treino para a P3 de Linguagem de Programação I (C): escrever funções, completar código e caçar erros, com simulado e acompanhamento de evolução. Funciona offline.">
+<meta name="theme-color" content="#f4f6fa" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0c111e" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Guia C">
+<style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font-size:14px;font-family:system-ui,sans-serif}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Caveat:wght@600;700&display=swap">
+<style>
+/* Layout: folha de prova quadriculada; enunciado à esquerda, bancada de código à direita, correção em caneta vermelha embaixo */
+:root{
+  --paper:#f4f6fa; --grid:rgba(36,67,166,.065); --surface:#ffffff; --surface-2:#eef1f7;
+  --ink:#141c33; --ink-2:#4b5672; --ink-3:#5f6982; --line:#d8deea;
+  --accent:#2443a6; --accent-ink:#ffffff; --accent-soft:#e5eaf8;
+  --red:#c42a2d; --red-soft:#fbeaea; --ok:#1d7a4c; --ok-soft:#e2f2e9; --warn:#9a5c00; --warn-soft:#fbf0dc;
+  --code-bg:#101829; --code-fg:#dbe3f4; --code-line:#1d2740; --code-gut:#7d8aa6;
+  --tk-kw:#93b1ff; --tk-ty:#7fd6c9; --tk-str:#f2c47e; --tk-num:#f5a08f; --tk-com:#8a96b0; --tk-pre:#c8a2ff;
+  --f-display:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --f-pen:"Caveat","Comic Sans MS",cursive;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0c111e; --grid:rgba(138,166,255,.045); --surface:#131a2b; --surface-2:#182138;
+  --ink:#e4e9f5; --ink-2:#a2acc4; --ink-3:#939eb7; --line:#253049;
+  --accent:#8ea8ff; --accent-ink:#0c1226; --accent-soft:#1b2648;
+  --red:#ff6f66; --red-soft:#3a191c; --ok:#5ed198; --ok-soft:#122e20; --warn:#f0b357; --warn-soft:#33260f;
+  --code-bg:#080c17; --code-line:#161f35; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#0c111e; --grid:rgba(138,166,255,.045); --surface:#131a2b; --surface-2:#182138;
+  --ink:#e4e9f5; --ink-2:#a2acc4; --ink-3:#939eb7; --line:#253049;
+  --accent:#8ea8ff; --accent-ink:#0c1226; --accent-soft:#1b2648;
+  --red:#ff6f66; --red-soft:#3a191c; --ok:#5ed198; --ok-soft:#122e20; --warn:#f0b357; --warn-soft:#33260f;
+  --code-bg:#080c17; --code-line:#161f35; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;
+  color:var(--ink); font-family:var(--f-body); font-size:15px; line-height:1.55;
+}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* topo */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding-block:10px}
+.brand{display:flex;align-items:baseline;gap:10px;margin-right:auto}
+.brand b{font-family:var(--f-display);font-weight:800;font-size:20px;letter-spacing:-.01em}
+.brand span{font-family:var(--f-mono);font-size:12px;color:var(--ink-3)}
+nav{display:flex;gap:4px;flex-wrap:wrap}
+nav a{text-decoration:none;color:var(--ink-2);font-weight:500;padding:6px 12px;border-radius:6px;font-size:14px}
+nav a:hover{background:var(--surface-2);color:var(--ink)}
+nav a[aria-current="page"]{background:var(--ink);color:var(--paper)}
+.ai-pill{font-family:var(--f-mono);font-size:11.5px;padding:4px 9px;border-radius:99px;border:1px solid var(--line);color:var(--ink-2);white-space:nowrap}
+.ai-pill.on{border-color:color-mix(in srgb,var(--ok) 50%,transparent);color:var(--ok);background:var(--ok-soft)}
+.ai-pill.off{color:var(--warn);background:var(--warn-soft);border-color:color-mix(in srgb,var(--warn) 40%,transparent)}
+
+main{padding-block:28px 64px}
+.view[hidden]{display:none!important}
+h1,h2,h3{font-family:var(--f-display);letter-spacing:-.015em;text-wrap:balance;margin:0}
+.eyebrow{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.btn{border:1px solid var(--line);background:var(--surface);padding:9px 16px;border-radius:8px;font-weight:600;font-size:14px;display:inline-flex;align-items:center;gap:8px;transition:background .15s,border-color .15s}
+.btn:hover{border-color:var(--ink-3)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.ink{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.kbd{font-family:var(--f-mono);font-size:11px;opacity:.75}
+.muted{color:var(--ink-2)}
+
+/* ===== PAINEL ===== */
+.hero{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:28px;align-items:end;margin-bottom:28px}
+.hero h1{font-size:clamp(30px,4.6vw,50px);font-weight:800;line-height:1.02}
+.hero h1 em{font-style:normal;font-family:var(--f-pen);color:var(--red);font-size:1.25em;font-weight:700;letter-spacing:0}
+.hero p{max-width:56ch;color:var(--ink-2);margin:12px 0 0}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.ready{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+.ready-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.ready-num{font-family:var(--f-display);font-weight:800;font-size:44px;line-height:1;font-variant-numeric:tabular-nums}
+.ready-num small{font-size:18px;color:var(--ink-3)}
+.bar{height:8px;border-radius:99px;background:var(--surface-2);overflow:hidden;margin-top:12px}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .4s}
+.bar.ok i{background:var(--ok)}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:28px}
+.stat{background:var(--surface);padding:14px 18px}
+.stat b{display:block;font-family:var(--f-display);font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.2}
+.stat span{font-size:13px;color:var(--ink-2)}
+.panel-grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:24px}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px}
+.box h2{font-size:19px;margin-bottom:4px}
+.box .sub{font-size:13.5px;color:var(--ink-2);margin:0 0 14px}
+.topic-row{display:grid;grid-template-columns:minmax(0,1fr) 120px auto;align-items:center;gap:14px;padding:11px 0;border-top:1px solid var(--line)}
+.topic-row:first-of-type{border-top:0}
+.topic-row .nm{font-weight:600}
+.topic-row .nm small{display:block;font-weight:400;font-size:12.5px;color:var(--ink-3);font-family:var(--f-mono)}
+.topic-row .bar{margin:0}
+.link-btn{background:none;border:0;color:var(--accent);font-weight:600;font-size:13.5px;padding:4px 2px}
+.link-btn:hover{text-decoration:underline}
+.rev-list{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.rev-list button{width:100%;text-align:left;display:flex;align-items:center;gap:10px;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.rev-list button:hover{border-color:var(--ink-3)}
+.rev-list .code{font-family:var(--f-mono);font-size:12px;color:var(--ink-3);width:44px;flex:none}
+.rev-list .tt{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14px}
+.note-chip{font-family:var(--f-pen);font-weight:700;font-size:20px;line-height:1;color:var(--red);flex:none}
+.note-chip.ten{color:var(--ok)}
+.empty{font-size:14px;color:var(--ink-3);padding:10px 0}
+.rules{margin:0;padding-left:18px;font-size:14px;color:var(--ink-2);display:grid;gap:6px}
+.rules code{font-family:var(--f-mono);font-size:12.5px;color:var(--ink);background:var(--surface-2);padding:1px 5px;border-radius:4px}
+
+/* ===== TREINO ===== */
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:18px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;flex:1;min-width:0}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:5px 12px;font-size:13px;font-weight:500;color:var(--ink-2)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.q-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:20px;align-items:start}
+.sheet{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px 22px 18px;position:relative}
+.sheet::before{content:"";position:absolute;left:0;top:18px;bottom:18px;width:3px;background:var(--red);opacity:.55;border-radius:0 3px 3px 0}
+.q-meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.tag{font-family:var(--f-mono);font-size:11.5px;padding:2px 8px;border-radius:5px;background:var(--surface-2);color:var(--ink-2)}
+.tag.kind{background:var(--accent-soft);color:var(--accent)}
+.tag.best{background:var(--ok-soft);color:var(--ok)}
+.sheet h2{font-size:22px;margin-bottom:10px}
+.enun{font-size:16px;line-height:1.6;margin:0 0 14px;max-width:62ch}
+.enun strong{font-weight:600}
+.sig{font-family:var(--f-mono);font-size:13.5px;background:var(--surface-2);border:1px dashed var(--line);padding:10px 12px;border-radius:8px;overflow-x:auto;white-space:pre}
+.sig-label{margin:14px 0 6px}
+details.ctx{margin-top:14px}
+details.ctx summary{cursor:pointer;font-size:13.5px;font-weight:600;color:var(--ink-2);padding:4px 0}
+details.ctx[open] summary{margin-bottom:6px}
+
+pre.code{margin:0;background:var(--code-bg);color:var(--code-fg);font-family:var(--f-mono);font-size:13px;line-height:1.6;padding:12px 14px;border-radius:8px;overflow-x:auto;tab-size:4}
+.tk-kw{color:var(--tk-kw)} .tk-ty{color:var(--tk-ty)} .tk-str{color:var(--tk-str)} .tk-num{color:var(--tk-num)} .tk-com{color:var(--tk-com);font-style:italic} .tk-pre{color:var(--tk-pre)}
+
+.bench{background:var(--code-bg);border-radius:12px;overflow:hidden;border:1px solid var(--code-line)}
+.bench-head{display:flex;align-items:center;gap:10px;padding:8px 12px;border-bottom:1px solid var(--code-line);font-family:var(--f-mono);font-size:12px;color:var(--code-gut)}
+.bench-head .fname{color:var(--code-fg)}
+.bench-head .sp{margin-left:auto}
+.bench-ro{padding:10px 0 4px;border-bottom:1px dashed var(--code-line)}
+.bench-ro pre.code,.bench-post pre.code{background:none;border-radius:0;padding:0 14px 0 0;opacity:.62}
+.bench-post{padding:4px 0 10px;border-top:1px dashed var(--code-line)}
+.ro-lab{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--code-gut);padding:0 14px 6px 52px}
+.ro-row{display:flex}
+.ro-row .gut{width:52px;flex:none;text-align:right;padding-right:14px;color:var(--code-gut);font-family:var(--f-mono);font-size:13px;line-height:1.6;user-select:none;white-space:pre}
+.ed{display:flex;position:relative;min-height:240px}
+.ed .gut{width:52px;flex:none;text-align:right;padding:12px 14px 12px 0;color:var(--code-gut);font-family:var(--f-mono);font-size:13.5px;line-height:1.6;user-select:none;overflow:hidden;white-space:pre;background:color-mix(in srgb,var(--code-line) 40%,transparent)}
+.ed textarea{flex:1;min-width:0;border:0;outline:0;resize:vertical;background:transparent;color:var(--code-fg);font-family:var(--f-mono);font-size:13.5px;line-height:1.6;padding:12px 14px;min-height:240px;white-space:pre;overflow:auto;tab-size:4;caret-color:var(--tk-str)}
+.ed textarea::placeholder{color:var(--code-gut)}
+.ed:focus-within{box-shadow:inset 0 0 0 1px var(--tk-kw)}
+.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.actions .hint{font-size:12.5px;color:var(--ink-3);margin-left:auto}
+
+/* completar */
+.fill{font-family:var(--f-mono);font-size:13.5px;line-height:2.1;background:var(--code-bg);color:var(--code-fg);padding:14px 16px;border-radius:12px;overflow-x:auto;white-space:pre;tab-size:4}
+.fill input{font-family:var(--f-mono);font-size:13px;background:var(--code-line);border:1px solid var(--code-gut);color:var(--tk-str);border-radius:4px;padding:1px 5px;margin:0 1px;min-width:3ch}
+.fill input:focus{outline:2px solid var(--tk-kw);outline-offset:0}
+.fill input.right{border-color:var(--ok);color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--code-bg))}
+.fill input.wrong{border-color:var(--red);color:var(--red);background:color-mix(in srgb,var(--red) 14%,var(--code-bg));text-decoration:line-through}
+.fill .ans{color:var(--ok);font-size:12px}
+
+/* caça-erro */
+.lines{background:var(--code-bg);border-radius:12px;padding:10px 0;overflow-x:auto}
+.lines button{display:flex;width:100%;text-align:left;background:none;border:0;padding:0;font-family:var(--f-mono);font-size:13.5px;line-height:1.75;color:var(--code-fg);white-space:pre;border-left:3px solid transparent}
+.lines button:hover{background:var(--code-line)}
+.lines button .n{width:46px;flex:none;text-align:right;padding-right:14px;color:var(--code-gut)}
+.lines button[aria-pressed="true"]{background:color-mix(in srgb,var(--tk-kw) 18%,transparent);border-left-color:var(--tk-kw)}
+.lines button.is-bug{background:color-mix(in srgb,var(--red) 22%,transparent);border-left-color:var(--red)}
+.lines button.is-miss{background:color-mix(in srgb,var(--ink-3) 18%,transparent);text-decoration:line-through}
+.lines button:disabled{cursor:default}
+
+/* ===== CORREÇÃO ===== */
+.correcao{margin-top:22px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px;display:grid;grid-template-columns:150px minmax(0,1fr);gap:24px}
+.grade{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+.grade-mark{position:relative;width:128px;height:104px;display:grid;place-items:center}
+.grade-mark svg{position:absolute;inset:0;width:100%;height:100%}
+.grade-mark svg ellipse{fill:none;stroke:var(--red);stroke-width:2.6;stroke-linecap:round}
+.grade-mark b{font-family:var(--f-pen);font-weight:700;font-size:52px;color:var(--red);line-height:1;transform:rotate(-6deg)}
+.grade-mark.ten svg ellipse{stroke:var(--ok)}
+.grade-mark.ten b{color:var(--ok)}
+.grade small{font-size:12px;color:var(--ink-3);line-height:1.35}
+.corr-body{min-width:0;display:grid;gap:16px}
+.zero{background:var(--red-soft);color:var(--red);border-radius:8px;padding:10px 14px;font-weight:600;font-size:14.5px}
+.resumo{font-size:15.5px;margin:0}
+.errs{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.errs li{border-left:3px solid var(--red);padding:2px 0 2px 12px}
+.errs .ln{font-family:var(--f-mono);font-size:12px;color:var(--red);font-weight:700}
+.errs p{margin:2px 0 4px;font-size:14.5px}
+.errs code{font-family:var(--f-mono);font-size:12.5px;background:var(--surface-2);padding:2px 6px;border-radius:4px;display:inline-block;max-width:100%;overflow-x:auto;white-space:pre;vertical-align:top}
+.crit{list-style:none;margin:0;padding:0;display:grid;gap:5px;font-size:13.5px}
+.crit li{display:flex;gap:8px;align-items:baseline}
+.crit .m{font-family:var(--f-mono);font-weight:700;width:14px;flex:none}
+.crit .ok .m{color:var(--ok)} .crit .no .m{color:var(--red)} .crit .no{color:var(--ink)} .crit .ok{color:var(--ink-2)}
+.crit .zr{font-family:var(--f-mono);font-size:10.5px;color:var(--red);border:1px solid currentColor;border-radius:4px;padding:0 4px;margin-left:4px}
+.sect-t{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px;display:flex;align-items:center;gap:10px}
+.sect-t .link-btn{margin-left:auto;text-transform:none;letter-spacing:0;font-family:var(--f-body)}
+.exp{font-size:14.5px;margin:0;color:var(--ink-2);max-width:70ch}
+.loading{display:flex;align-items:center;gap:12px;font-size:14.5px;color:var(--ink-2)}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--accent);animation:pulse 1s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.25;transform:scale(.7)}}
+
+/* ===== BANCO ===== */
+.bank{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.bank .box{padding:16px 18px}
+.bank h3{font-size:17px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.bank h3 small{font-family:var(--f-mono);font-size:12px;font-weight:400;color:var(--ink-3)}
+.bank-list{list-style:none;margin:0;padding:0}
+.bank-list button{width:100%;display:grid;grid-template-columns:48px minmax(0,1fr) auto 40px;gap:10px;align-items:center;text-align:left;background:none;border:0;border-top:1px solid var(--line);padding:8px 2px;font-size:14px}
+.bank-list li:first-child button{border-top:0}
+.bank-list button:hover .tt{color:var(--accent)}
+.bank-list .code{font-family:var(--f-mono);font-size:12px;color:var(--ink-3)}
+.bank-list .tt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bank-list .note-chip{text-align:right;font-size:19px}
+.bank-list .none{color:var(--ink-3);font-family:var(--f-mono);font-size:12px;text-align:right}
+
+/* ===== SIMULADO ===== */
+.sim-start{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:24px}
+.sim-bar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.sim-tabs{display:flex;gap:6px;flex-wrap:wrap;flex:1;min-width:0}
+.sim-tabs button{width:40px;height:40px;border-radius:8px;border:1px solid var(--line);background:var(--surface);font-family:var(--f-mono);font-weight:700}
+.sim-tabs button.done{border-color:var(--accent);color:var(--accent)}
+.sim-tabs button[aria-current="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.timer{font-family:var(--f-mono);font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;padding:4px 12px;border-radius:8px;background:var(--surface);border:1px solid var(--line)}
+.timer.low{color:var(--red);border-color:var(--red)}
+.boletim{display:grid;gap:14px}
+.bol-head{display:flex;gap:24px;align-items:center;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px}
+.bol-head h2{font-size:26px}
+.bol-row{background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.bol-row>summary{display:flex;gap:14px;align-items:center;padding:14px 18px;cursor:pointer;list-style:none}
+.bol-row>summary::-webkit-details-marker{display:none}
+.bol-row>summary .tt{flex:1;min-width:0;font-weight:600}
+.bol-row>summary .tt small{display:block;font-weight:400;color:var(--ink-3);font-size:12.5px}
+.bol-row .note-chip{font-size:28px}
+.bol-row .correcao{margin:0 18px 18px;border:0;background:var(--surface-2)}
+
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:8px;font-size:14px;z-index:20;max-width:calc(100% - 32px)}
+
+.spec{display:grid;gap:8px;background:var(--surface-2);border:1px dashed var(--line);border-radius:8px;padding:12px 14px;font-size:14px}
+.spec>div{display:grid;grid-template-columns:76px minmax(0,1fr);gap:10px;align-items:baseline}
+.spec .k{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+.spec ul{list-style:none;margin:0;padding:0;display:grid;gap:3px}
+.spec li{display:flex;gap:10px;flex-wrap:wrap;align-items:baseline}
+.spec code{font-family:var(--f-mono);font-size:13px;color:var(--ink);font-weight:500}
+.spec li span{color:var(--ink-2);font-family:var(--f-mono);font-size:12.5px}
+.coach{display:flex;gap:16px;align-items:center;flex-wrap:wrap;background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);border-radius:12px;padding:16px 20px;margin-bottom:20px}
+.coach p{margin:0;flex:1;min-width:min(100%,260px);font-size:15.5px;max-width:80ch}
+.today{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin-bottom:20px}
+.today .box{padding:16px 18px}
+.big{font-family:var(--f-display);font-weight:800;font-size:32px;line-height:1.1;font-variant-numeric:tabular-nums;margin:6px 0 2px}
+.big small{font-size:16px;color:var(--ink-3);font-weight:600}
+.small{font-size:13px}
+.row-sm{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:12px;font-size:13px;color:var(--ink-2);flex-wrap:wrap}
+select,input[type="date"]{border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:5px 8px;font-size:13.5px}
+#evoSvg{width:100%;height:auto;display:block;margin-top:8px;overflow:visible}
+.evo-line{fill:none;stroke:var(--accent);stroke-width:2;stroke-linejoin:round}
+.evo-area{fill:var(--accent-soft)}
+.evo-grid{stroke:var(--line);stroke-width:1}
+.evo-dot{fill:var(--accent)}
+.evo-lab{fill:var(--ink-3);font-family:var(--f-mono);font-size:10px}
+.marcos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.marco{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:12.5px;color:var(--ink-3);line-height:1.35}
+.marco b{display:block;font-size:13.5px;color:var(--ink-2);margin-bottom:2px}
+.marco.on{border-color:color-mix(in srgb,var(--ok) 45%,transparent);background:var(--ok-soft);color:var(--ink-2)}
+.marco.on b{color:var(--ok)}
+.gain{background:var(--accent-soft);border-radius:8px;padding:10px 14px;font-size:14.5px}
+.gain.up{background:var(--ok-soft)}
+.gain b{font-weight:600}
+.grade-mark.pend svg ellipse{stroke:var(--ink-3);stroke-dasharray:6 6}
+.grade-mark.pend b{color:var(--ink-3)}
+.cmp{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.cmp>div{min-width:0}
+.self{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.self-opt{text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:10px 12px;display:grid;gap:2px}
+.self-opt b{font-size:14px}
+.self-opt span{font-size:12.5px;color:var(--ink-2);line-height:1.4}
+.self-opt:hover{border-color:var(--ink-3)}
+.self-opt[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);box-shadow:inset 0 0 0 1px var(--accent)}
+.foot{padding-block:8px 40px;font-size:13px;color:var(--ink-3);display:grid;gap:4px}
+.foot b{color:var(--ink-2);font-weight:600}
+@media (max-width:900px){
+  .cmp{grid-template-columns:minmax(0,1fr)}
+  .today{grid-template-columns:minmax(0,1fr)}
+  .hero,.panel-grid,.q-grid,.sim-start,.bank{grid-template-columns:minmax(0,1fr)}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:560px){
+  .self{grid-template-columns:minmax(0,1fr)}
+  .correcao{grid-template-columns:minmax(0,1fr)}
+  .grade{flex-direction:row;text-align:left}
+  .topic-row{grid-template-columns:minmax(0,1fr) 70px}
+  .topic-row .link-btn{grid-column:1/-1;justify-self:start;padding:0}
+  .actions .hint{display:none}
+  .brand span{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand"><b>Guia de Estudos em C</b><span>Fatec Mogi · ADS · LP I</span></div>
+    <nav aria-label="Seções">
+      <a href="#painel" data-v="painel">Painel</a>
+      <a href="#treino" data-v="treino">Treino</a>
+      <a href="#simulado" data-v="simulado">Simulado</a>
+      <a href="#banco" data-v="banco">Banco</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- PAINEL -->
+  <section class="view" id="v-painel">
+    <div class="hero">
+      <div>
+        <div class="eyebrow">Linguagem de Programação I · Prova P3</div>
+        <h1>Meta da prova: <em>10,0</em><br>sem depender de sorte.</h1>
+        <p>Cada resposta passa pela checagem automática dos critérios que zeram questão (verbo do enunciado, recursão sem laço, <code>malloc</code> completo, índices de 0 a n − 1) e por uma autoavaliação sua contra o gabarito. Uma questão só conta como dominada quando você tira 10.</p>
+        <div class="hero-actions">
+          <button class="btn primary" id="goTreino">Continuar treino</button>
+          <button class="btn" id="goSim">Fazer simulado da P3</button>
+        </div>
+      </div>
+      <div class="ready">
+        <div class="ready-top"><span class="eyebrow">Prontidão para a P3</span><span class="muted" id="readyTxt" style="font-size:13px"></span></div>
+        <div class="ready-num" id="readyNum">0<small>%</small></div>
+        <div class="bar"><i id="readyBar" style="width:0"></i></div>
+      </div>
+    </div>
+    <div class="coach"><p id="coachTxt"></p><button class="btn primary" id="coachBtn">Treinar agora</button></div>
+    <div class="today">
+      <div class="box"><div class="eyebrow">Meta de hoje</div><div class="big" id="hjNum">0</div><div class="bar" id="hjBarW"><i id="hjBar" style="width:0"></i></div>
+        <div class="row-sm"><label for="metaDiaria">Questões por dia</label><select id="metaDiaria"><option>3</option><option>5</option><option>6</option><option>8</option><option>10</option><option>15</option></select></div></div>
+      <div class="box"><div class="eyebrow">Data da P3</div><div class="big" id="provaFalta">–</div><p class="small muted" id="provaRitmo" style="margin:4px 0 0"></p>
+        <div class="row-sm"><label for="provaData">Dia da prova</label><input type="date" id="provaData"></div></div>
+      <div class="box"><div class="eyebrow">Sua evolução</div><svg id="evoSvg" viewBox="0 0 300 96" role="img" aria-label="Prontidão por dia"></svg><p class="small muted" id="evoTxt" style="margin:4px 0 0"></p></div>
+    </div>
+    <div class="stats">
+      <div class="stat"><b id="stMedia">–</b><span>média das melhores notas</span></div>
+      <div class="stat"><b id="stDom">0</b><span>questões dominadas (nota 10)</span></div>
+      <div class="stat"><b id="stSeq">0</b><span>dias seguidos treinando</span></div>
+      <div class="stat"><b id="stSim">–</b><span>último simulado</span></div>
+    </div>
+    <div class="panel-grid">
+      <div class="box">
+        <h2>Domínio por conteúdo</h2>
+        <p class="sub">Média das melhores notas em cada conteúdo. Questões não feitas contam como zero.</p>
+        <div id="topicRows"></div>
+      </div>
+      <div style="display:grid;gap:24px;align-content:start">
+        <div class="box">
+          <h2>Fila de revisão</h2>
+          <p class="sub">Questões que você já fez e ainda não fechou com 10.</p>
+          <ul class="rev-list" id="revList"></ul>
+        </div>
+        <div class="box">
+          <h2>Marcos</h2>
+          <p class="sub" id="marcosSub">Conquistas da sua preparação.</p>
+          <div class="marcos" id="marcosGrid"></div>
+        </div>
+        <div class="box">
+          <h2>O que zera a questão</h2>
+          <p class="sub">Os erros que o professor não perdoa.</p>
+          <ol class="rules">
+            <li>Enunciado diz <b>exibir</b> e a função retorna um valor em vez de <code>void</code> com <code>printf</code>.</li>
+            <li>Enunciado diz <b>retornar/criar</b> e a função imprime em vez de retornar.</li>
+            <li>Qualquer <code>for</code>, <code>while</code> ou <code>do-while</code> dentro de função recursiva.</li>
+            <li><code>malloc</code> sem cast, sem <code>sizeof</code>, sem checar <code>NULL</code> ou sem retornar o ponteiro.</li>
+            <li>Índice fora de <code>0</code> até <code>n - 1</code>, string sem <code>'\0'</code>, matriz resultado sem zerar.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TREINO -->
+  <section class="view" id="v-treino" hidden>
+    <div class="toolbar">
+      <div class="chips" id="chips" role="group" aria-label="Filtrar por conteúdo"></div>
+      <button class="btn" id="btnProx">Próxima questão →</button>
+    </div>
+    <div class="q-grid">
+      <article class="sheet" id="qSheet"></article>
+      <div id="qWork"></div>
+    </div>
+    <section class="correcao" id="qCorr" hidden></section>
+  </section>
+
+  <!-- SIMULADO -->
+  <section class="view" id="v-simulado" hidden>
+    <div id="simRoot"></div>
+  </section>
+
+  <!-- BANCO -->
+  <section class="view" id="v-banco" hidden>
+    <div class="toolbar" style="justify-content:space-between">
+      <div><div class="eyebrow">Banco de questões</div><h1 style="font-size:28px">Todas as questões do treino</h1></div>
+      <button class="btn" id="btnReset">Zerar meu progresso</button>
+    </div>
+    <div id="resetConfirm" hidden class="box" style="margin-bottom:18px;border-color:var(--red)">
+      <p style="margin:0 0 12px">Isso apaga todas as suas notas, sequência e simulados. Não dá para desfazer.</p>
+      <div class="actions" style="margin:0"><button class="btn" id="resetNo">Cancelar</button><button class="btn ink" id="resetYes" style="background:var(--red);border-color:var(--red)">Apagar progresso</button></div>
+    </div>
+    <div class="bank" id="bankRoot"></div>
+  </section>
+</main>
+<footer class="wrap foot">
+  <span><b>Guia de Estudos em C · Fatec Mogi</b> — material de estudo feito por aluno, sem vínculo oficial com a Fatec.</span>
+  <span>Funciona offline e guarda o progresso neste aparelho. No iPhone: Compartilhar → Adicionar à Tela de Início. No Android: menu ⋮ → Instalar app.</span>
+</footer>
+
+<script>
+/* ============ utilidades ============ */
+const RAW = (s,...v) => String.raw(s,...v).replace(/^\n/,'').replace(/\n\s*$/,'');
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt = n => (Math.round(n*10)/10).toFixed(1).replace('.', ',');
+const today = () => { const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); };
+function toast(msg){ const t=document.createElement('div'); t.className='toast'; t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),2600); }
+function lsGet(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v);}catch(e){return d;} }
+function lsSet(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+
+/* realce de sintaxe C */
+const TYPES='int|float|double|char|void|long|short|unsigned|signed|size_t';
+const KWS='if|else|for|while|do|return|break|continue|switch|case|default|sizeof|struct|typedef|const|NULL';
+const TOK=new RegExp(String.raw`(\/\*[\s\S]*?\*\/|\/\/[^\n]*)|("(?:\\.|[^"\\\n])*")|('(?:\\.|[^'\\\n])*')|(^[ \t]*#[^\n]*)|\b(\d+(?:\.\d+)?)\b|\b(${TYPES})\b|\b(${KWS})\b`,'gm');
+function hl(code){
+  let out='',last=0,m; TOK.lastIndex=0;
+  while((m=TOK.exec(code))){
+    out+=esc(code.slice(last,m.index));
+    const cls=m[1]?'com':m[2]||m[3]?'str':m[4]?'pre':m[5]?'num':m[6]?'ty':'kw';
+    out+=`<span class="tk-${cls}">${esc(m[0])}</span>`; last=TOK.lastIndex;
+  }
+  return out+esc(code.slice(last));
+}
+
+/* ============ conteúdos ============ */
+const TOPICS={
+  malloc:{nome:'Alocação dinâmica',det:'malloc · int, float, struct'},
+  struct:{nome:'Structs',det:'por valor e por ponteiro'},
+  recursao:{nome:'Iterativa × recursiva',det:'PA · PG · Fibonacci · fatorial · dígitos'},
+  ponteiros:{nome:'Vetores',det:'percorrer · maior/menor · inverter'},
+  strings:{nome:'Strings sem <string.h>',det:"'\\0' · copiar · comparar · palíndromo"},
+  matrizes:{nome:'Matrizes',det:'soma · multiplicação · diagonais'}
+};
+const KIND={escrever:'Escreva a função',completar:'Complete o código',erro:'Encontre o erro'};
+
+/* ============ critérios automáticos ============ */
+const ck={
+  exibe:{msg:'Verbo "exibir": função void com printf dentro dela.',crit:true,f:s=>/\bvoid\s+\w+\s*\(/.test(s)&&/\bprintf\s*\(/.test(s)},
+  semPrintf:{msg:'Verbo "retornar": sem printf dentro da função.',crit:false,f:s=>!/\bprintf\s*\(/.test(s)},
+  retorna:{msg:'Retorna o valor calculado com return.',crit:true,f:s=>/\breturn\s+[^;]+;/.test(s)},
+  semLaco:{msg:'Nenhum laço (for/while/do) na função recursiva.',crit:true,f:s=>!/\b(for|while|do)\b/.test(s)},
+  comLaco:{msg:'Versão iterativa usa laço.',crit:true,f:s=>/\b(for|while)\b/.test(s)},
+  stdlib:{msg:'#include <stdlib.h> para usar malloc.',crit:false,f:(s,c)=>/#\s*include\s*<stdlib\.h>/.test(c)},
+  malloc:{msg:'Usa malloc.',crit:true,f:s=>/\bmalloc\s*\(/.test(s)},
+  nulo:{msg:'Verifica if (ptr == NULL) return NULL;',crit:false,f:s=>/if\s*\(\s*(\w+\s*==\s*NULL|NULL\s*==\s*\w+|!\s*\w+)\s*\)\s*\{?\s*return\s+NULL/.test(s)},
+  retPtr:{msg:'Retorna o ponteiro alocado.',crit:true,f:s=>/return\s+\w+\s*;\s*\}\s*$/.test(s)},
+  semStringH:{msg:'Não usa <string.h> (strlen, strcpy, strcmp…).',crit:true,f:(s,c)=>!/string\.h|\bstr(len|cpy|cmp|cat|ncpy|ncmp)\s*\(/.test(c)},
+  barra0:{msg:"Controla o fim da string pelo '\\0'.",crit:false,f:(s,c)=>/'\\0'|!=\s*0\b/.test(c)},
+  seta:{msg:'Acessa campos pelo ponteiro com -> ou (*p).',crit:false,f:s=>/->|\(\s*\*\s*\w+\s*\)\s*\./.test(s)},
+  zeraC:{msg:'Zera c[i][j] antes de acumular.',crit:false,f:s=>/c\s*\[\s*\w+\s*\]\s*\[\s*\w+\s*\]\s*=\s*0\s*;/.test(s)},
+  tresLacos:{msg:'Três laços aninhados (i, j, k).',crit:false,f:s=>(s.match(/\bfor\b/g)||[]).length>=3},
+  diagP:{msg:'Diagonal principal: i == j (ou m[i][i]).',crit:false,f:s=>/\bi\s*==\s*j\b|\bj\s*==\s*i\b|\[\s*i\s*\]\s*\[\s*i\s*\]/.test(s)},
+  diagS:{msg:'Diagonal secundária: i + j == N - 1.',crit:false,f:s=>/i\s*\+\s*j\s*==\s*(N|4)\s*-\s*1|i\s*\+\s*j\s*==\s*3|\[\s*i\s*\]\s*\[\s*(N|4)\s*-\s*1\s*-\s*i\s*\]|\[\s*i\s*\]\s*\[\s*3\s*-\s*i\s*\]/.test(s)}
+};
+const rec=n=>({msg:`Chama a si mesma (${n}).`,crit:true,f:s=>(s.match(new RegExp('\\b'+n+'\\s*\\(','g'))||[]).length>=2});
+const naoRec=n=>({msg:'Versão iterativa não chama a si mesma.',crit:true,f:s=>(s.match(new RegExp('\\b'+n+'\\s*\\(','g'))||[]).length<2});
+const cast=(t,re)=>({msg:`Cast explícito ${t} no malloc.`,crit:false,f:s=>re.test(s)});
+const sz=(t,re)=>({msg:`Multiplica por sizeof(${t}).`,crit:false,f:s=>re.test(s)});
+const tem=(re,msg,crit=false)=>({msg,crit,f:s=>re.test(s)});
+const CAST_INT=cast('(int *)',/\(\s*int\s*\*\s*\)\s*malloc/), SZ_INT=sz('int',/sizeof\s*\(\s*int\s*\)/);
+
+/* ============ banco de questões ============ */
+const IO='#include <stdio.h>';
+const IOL='#include <stdio.h>\n#include <stdlib.h>';
+const ALUNO=RAW`
+#include <stdio.h>
+
+struct Aluno {
+    char nome[50];
+    float n1, n2;
+};`;
+const PROD=RAW`
+#include <stdio.h>
+
+struct Produto {
+    int codigo;
+    char nome[30];
+    float preco;
+};`;
+
+const Q=[
+/* ---------- MALLOC ---------- */
+{id:'M1',t:'malloc',k:'escrever',lib:true,titulo:'Vetor dinâmico com o dobro do índice',
+ enun:'Crie uma função que <strong>aloca dinamicamente</strong> um vetor de <strong>n inteiros</strong>, preenche cada posição com o dobro do seu índice e <strong>retorna o ponteiro</strong> para uso na main.',
+ sig:'int *criaVetor(int n)',ctx:IO,
+ main:RAW`
+int main()
+{
+    int *v = criaVetor(5);
+    if (v == NULL) return 1;
+    for (int i = 0; i < 5; i++)
+        printf("%d ", v[i]);   // 0 2 4 6 8
+    free(v);
+    return 0;
+}`,
+ ck:[ck.stdlib,ck.malloc,CAST_INT,SZ_INT,ck.nulo,ck.retPtr,ck.semPrintf],
+ gab:RAW`
+#include <stdlib.h>
+
+int *criaVetor(int n)
+{
+    int *v = (int *) malloc(n * sizeof(int));
+    if (v == NULL) return NULL;
+    for (int i = 0; i < n; i++)
+        v[i] = 2 * i;
+    return v;
+}`},
+{id:'M2',t:'malloc',k:'escrever',lib:true,titulo:'Cópia dinâmica de notas',
+ enun:'Crie uma função que <strong>aloca dinamicamente</strong> um vetor de <strong>n floats</strong>, copia nele os valores do vetor <code>notas</code> e <strong>retorna o ponteiro</strong> do novo vetor.',
+ sig:'float *copiaNotas(float *notas, int n)',ctx:IO,
+ main:RAW`
+int main()
+{
+    float notas[4] = {7.5, 8.0, 5.5, 10.0};
+    float *c = copiaNotas(notas, 4);
+    if (c == NULL) return 1;
+    free(c);
+    return 0;
+}`,
+ ck:[ck.stdlib,ck.malloc,cast('(float *)',/\(\s*float\s*\*\s*\)\s*malloc/),sz('float',/sizeof\s*\(\s*float\s*\)/),ck.nulo,ck.retPtr,ck.semPrintf],
+ gab:RAW`
+#include <stdlib.h>
+
+float *copiaNotas(float *notas, int n)
+{
+    float *copia = (float *) malloc(n * sizeof(float));
+    if (copia == NULL) return NULL;
+    for (int i = 0; i < n; i++)
+        copia[i] = notas[i];
+    return copia;
+}`},
+{id:'M3',t:'malloc',k:'escrever',lib:true,titulo:'Vetor dinâmico de struct',
+ enun:'Crie uma função que <strong>aloca dinamicamente</strong> um vetor de <strong>n struct Produto</strong>, define <code>codigo = i + 1</code> e <code>preco = 0</code> em cada posição e <strong>retorna o ponteiro</strong>.',
+ sig:'struct Produto *criaEstoque(int n)',ctx:PROD,
+ main:RAW`
+int main()
+{
+    struct Produto *p = criaEstoque(3);
+    if (p == NULL) return 1;
+    printf("%d %d %d", p[0].codigo, p[1].codigo, p[2].codigo); // 1 2 3
+    free(p);
+    return 0;
+}`,
+ ck:[ck.stdlib,ck.malloc,cast('(struct Produto *)',/\(\s*struct\s+Produto\s*\*\s*\)\s*malloc/),sz('struct Produto',/sizeof\s*\(\s*struct\s+Produto\s*\)/),ck.nulo,ck.retPtr,ck.semPrintf],
+ gab:RAW`
+#include <stdlib.h>
+
+struct Produto *criaEstoque(int n)
+{
+    struct Produto *p = (struct Produto *) malloc(n * sizeof(struct Produto));
+    if (p == NULL) return NULL;
+    for (int i = 0; i < n; i++)
+    {
+        p[i].codigo = i + 1;
+        p[i].preco = 0;
+    }
+    return p;
+}`},
+{id:'M4',t:'malloc',k:'escrever',titulo:'Intervalo alocado',
+ enun:'Crie uma função que <strong>aloca dinamicamente</strong> um vetor com todos os inteiros de <code>ini</code> até <code>fim</code> (inclusive, com ini ≤ fim) e <strong>retorna o ponteiro</strong>.',
+ sig:'int *intervalo(int ini, int fim)',ctx:IOL,
+ main:RAW`
+int main()
+{
+    int *v = intervalo(3, 7);   // 3 4 5 6 7
+    if (v == NULL) return 1;
+    free(v);
+    return 0;
+}`,
+ ck:[ck.malloc,CAST_INT,SZ_INT,ck.nulo,ck.retPtr,tem(/fim\s*-\s*ini\s*\+\s*1|1\s*\+\s*fim\s*-\s*ini/,'Tamanho correto: fim - ini + 1.')],
+ gab:RAW`
+int *intervalo(int ini, int fim)
+{
+    int n = fim - ini + 1;
+    int *v = (int *) malloc(n * sizeof(int));
+    if (v == NULL) return NULL;
+    for (int i = 0; i < n; i++)
+        v[i] = ini + i;
+    return v;
+}`},
+{id:'M5',t:'malloc',k:'completar',titulo:'malloc completo para float',
+ enun:'Complete as lacunas para que a função aloque um vetor de n floats, zere todas as posições e retorne o ponteiro, seguindo o padrão exigido na prova.',
+ code:RAW`
+#include <stdio.h>
+#include ⟦<stdlib.h>⟧
+
+float *criaNotas(int n)
+{
+    float *v = ⟦(float *)⟧ malloc(n * ⟦sizeof(float)⟧);
+    if (v == ⟦NULL⟧) return NULL;
+    for (int i = 0; i < ⟦n⟧; i++)
+        v[i] = 0.0;
+    return ⟦v⟧;
+}`,
+ exp:'malloc recebe a quantidade de BYTES, por isso n * sizeof(float). O cast (float *) converte o void* devolvido. Se não houver memória o retorno é NULL, e a função repassa esse NULL para a main tratar.'},
+{id:'M6',t:'malloc',k:'erro',titulo:'Bytes que faltam',
+ enun:'A função deveria alocar um vetor de n inteiros zerados. Clique na linha com o erro.',
+ code:RAW`
+int *criaVetor(int n)
+{
+    int *v = (int *) malloc(n);
+    if (v == NULL) return NULL;
+    for (int i = 0; i < n; i++)
+        v[i] = 0;
+    return v;
+}`,bug:3,fix:'int *v = (int *) malloc(n * sizeof(int));',
+ exp:'malloc(n) reserva n BYTES, não n inteiros. Um int ocupa 4 bytes, então o laço escreve fora da área alocada. Sempre multiplique por sizeof(tipo).'},
+{id:'M7',t:'malloc',k:'erro',titulo:'Ponteiro perdido',
+ enun:'A função deveria alocar n floats com valor 1.0 e devolver o vetor para a main. Clique na linha com o erro.',
+ code:RAW`
+float *criaUns(int n)
+{
+    float *v = (float *) malloc(n * sizeof(float));
+    if (v == NULL) return NULL;
+    for (int i = 0; i < n; i++)
+        v[i] = 1.0;
+    return *v;
+}`,bug:7,fix:'return v;',
+ exp:'*v é o VALOR da primeira posição (um float), não o endereço. A função tem tipo float *, então deve retornar o próprio ponteiro v.'},
+
+/* ---------- STRUCT ---------- */
+{id:'S1',t:'struct',k:'escrever',titulo:'Exibir aluno por valor',
+ enun:'Crie uma função que recebe uma <strong>struct Aluno por valor</strong> e <strong>exibe na tela</strong> o nome e a média das duas notas.',
+ sig:'void exibeAluno(struct Aluno a)',ctx:ALUNO,
+ main:RAW`
+int main()
+{
+    struct Aluno a = {"Ana", 8.0, 6.0};
+    exibeAluno(a);   // Nome: Ana  Media: 7.00
+    return 0;
+}`,
+ ck:[ck.exibe,tem(/\ba\s*\.\s*nome/,'Acessa os campos com ponto (a.nome).'),tem(/\/\s*2/,'Calcula a média (n1 + n2) / 2.')],
+ gab:RAW`
+void exibeAluno(struct Aluno a)
+{
+    float media = (a.n1 + a.n2) / 2;
+    printf("Nome: %s\n", a.nome);
+    printf("Media: %.2f\n", media);
+}`},
+{id:'S2',t:'struct',k:'escrever',titulo:'Média por ponteiro',
+ enun:'Crie uma função que recebe um <strong>ponteiro para struct Aluno</strong> e <strong>retorna</strong> a média das duas notas.',
+ sig:'float mediaAluno(struct Aluno *a)',ctx:ALUNO,
+ main:RAW`
+int main()
+{
+    struct Aluno a = {"Bruno", 5.0, 9.0};
+    printf("%.1f", mediaAluno(&a));   // 7.0
+    return 0;
+}`,
+ ck:[ck.retorna,ck.seta,ck.semPrintf],
+ gab:RAW`
+float mediaAluno(struct Aluno *a)
+{
+    return (a->n1 + a->n2) / 2;
+}`},
+{id:'S3',t:'struct',k:'escrever',titulo:'Listar produtos',
+ enun:'Crie uma função que recebe um vetor de <strong>n struct Produto</strong> e <strong>exibe na tela</strong> código, nome e preço de cada produto.',
+ sig:'void exibeProdutos(struct Produto *v, int n)',ctx:PROD,
+ main:RAW`
+int main()
+{
+    struct Produto v[2] = {{1, "Caneta", 2.5}, {2, "Caderno", 19.9}};
+    exibeProdutos(v, 2);
+    return 0;
+}`,
+ ck:[ck.exibe,ck.comLaco,tem(/<\s*n\b/,'Percorre de 0 até n - 1 (i < n).')],
+ gab:RAW`
+void exibeProdutos(struct Produto *v, int n)
+{
+    for (int i = 0; i < n; i++)
+        printf("%d - %s - R$ %.2f\n", v[i].codigo, v[i].nome, v[i].preco);
+}`},
+{id:'S4',t:'struct',k:'escrever',titulo:'Contar aprovados',
+ enun:'Crie uma função que recebe um vetor de <strong>n struct Aluno</strong> e <strong>retorna</strong> quantos alunos têm média maior ou igual a 6.0.',
+ sig:'int contaAprovados(struct Aluno *v, int n)',ctx:ALUNO,
+ main:RAW`
+int main()
+{
+    struct Aluno t[3] = {{"Ana", 8, 6}, {"Caio", 3, 5}, {"Lia", 6, 6}};
+    printf("%d", contaAprovados(t, 3));   // 2
+    return 0;
+}`,
+ ck:[ck.retorna,ck.comLaco,ck.semPrintf,tem(/>=\s*6/,'Compara média >= 6.')],
+ gab:RAW`
+int contaAprovados(struct Aluno *v, int n)
+{
+    int cont = 0;
+    for (int i = 0; i < n; i++)
+        if ((v[i].n1 + v[i].n2) / 2 >= 6.0)
+            cont++;
+    return cont;
+}`},
+{id:'S5',t:'struct',k:'escrever',titulo:'Reajustar preço',
+ enun:'Crie uma função que recebe um <strong>ponteiro para struct Produto</strong> e um percentual, e aplica o reajuste no preço do próprio produto (ex.: 10 aumenta 10%).',
+ sig:'void reajusta(struct Produto *p, float percentual)',ctx:PROD,
+ main:RAW`
+int main()
+{
+    struct Produto p = {7, "Mouse", 50.0};
+    reajusta(&p, 10);
+    printf("%.2f", p.preco);   // 55.00
+    return 0;
+}`,
+ ck:[ck.seta,ck.semPrintf,tem(/\/\s*100/,'Divide o percentual por 100.')],
+ gab:RAW`
+void reajusta(struct Produto *p, float percentual)
+{
+    p->preco = p->preco + p->preco * percentual / 100;
+}`},
+{id:'S6',t:'struct',k:'escrever',titulo:'Exibir o mais caro',
+ enun:'Crie uma função que recebe um vetor de <strong>n struct Produto</strong> e <strong>exibe na tela</strong> o nome e o preço do produto mais caro.',
+ sig:'void exibeMaisCaro(struct Produto *v, int n)',ctx:PROD,
+ main:RAW`
+int main()
+{
+    struct Produto v[3] = {{1, "Lapis", 1.5}, {2, "Mochila", 120}, {3, "Regua", 4}};
+    exibeMaisCaro(v, 3);   // Mochila - 120.00
+    return 0;
+}`,
+ ck:[ck.exibe,ck.comLaco],
+ gab:RAW`
+void exibeMaisCaro(struct Produto *v, int n)
+{
+    int pos = 0;
+    for (int i = 1; i < n; i++)
+        if (v[i].preco > v[pos].preco)
+            pos = i;
+    printf("%s - %.2f\n", v[pos].nome, v[pos].preco);
+}`},
+{id:'S7',t:'struct',k:'completar',titulo:'Ponto, valor e ponteiro',
+ enun:'Complete os acessos aos campos. Por valor usa-se ponto; por ponteiro, seta ou (*p).',
+ code:RAW`
+struct Ponto {
+    int x;
+    int y;
+};
+
+void exibePonto(struct Ponto p)
+{
+    printf("(%d, %d)\n", p⟦.⟧x, p⟦.⟧y);
+}
+
+void movePonto(⟦struct Ponto⟧ *p, int dx, int dy)
+{
+    p⟦->⟧x = p->x + dx;
+    (*p)⟦.⟧y = (*p).y + dy;
+}`,
+ exp:'Com a struct recebida por valor, o acesso é p.x. Com ponteiro, p->x é o atalho de (*p).x. Os parênteses em (*p).y são obrigatórios porque o ponto tem precedência maior que o asterisco.'},
+{id:'S8',t:'struct',k:'erro',titulo:'Seta onde não cabe',
+ enun:'A função deveria exibir o nome e a média do aluno recebido por valor. Clique na linha com o erro.',
+ code:RAW`
+void exibeAluno(struct Aluno a)
+{
+    float media = (a.n1 + a.n2) / 2;
+    printf("Nome: %s\n", a->nome);
+    printf("Media: %.2f\n", media);
+}`,bug:4,fix:'printf("Nome: %s\\n", a.nome);',
+ exp:'a é uma struct (por valor), não um ponteiro. A seta -> só serve para ponteiro de struct; aqui o acesso é a.nome. Isso não compila.'},
+
+/* ---------- RECURSÃO / ITERAÇÃO ---------- */
+{id:'R1',t:'recursao',k:'escrever',titulo:'Fatorial iterativo',
+ enun:'Crie uma função <strong>iterativa</strong> que <strong>retorna</strong> o fatorial de n (n ≥ 0).',
+ sig:'int fatorialIter(int n)',ctx:IO,
+ main:'int main()\n{\n    printf("%d", fatorialIter(5));   // 120\n    return 0;\n}',
+ ck:[ck.comLaco,naoRec('fatorialIter'),ck.retorna,ck.semPrintf],
+ gab:RAW`
+int fatorialIter(int n)
+{
+    int fat = 1;
+    for (int i = 2; i <= n; i++)
+        fat = fat * i;
+    return fat;
+}`},
+{id:'R2',t:'recursao',k:'escrever',titulo:'Fatorial recursivo',
+ enun:'Crie uma função <strong>recursiva</strong> que <strong>retorna</strong> o fatorial de n (n ≥ 0).',
+ sig:'int fatorialRec(int n)',ctx:IO,
+ main:'int main()\n{\n    printf("%d", fatorialRec(5));   // 120\n    return 0;\n}',
+ ck:[rec('fatorialRec'),ck.semLaco,ck.retorna,ck.semPrintf],
+ gab:RAW`
+int fatorialRec(int n)
+{
+    if (n <= 1) return 1;
+    return n * fatorialRec(n - 1);
+}`},
+{id:'R3',t:'recursao',k:'escrever',titulo:'P.A. iterativa',
+ enun:'Crie uma função <strong>iterativa</strong> que <strong>exibe na tela</strong> os n primeiros termos de uma P.A. de primeiro termo a1 e razão r.',
+ sig:'void exibePAIter(int a1, int r, int n)',ctx:IO,
+ main:'int main()\n{\n    exibePAIter(2, 3, 5);   // 2 5 8 11 14\n    return 0;\n}',
+ ck:[ck.exibe,ck.comLaco,naoRec('exibePAIter')],
+ gab:RAW`
+void exibePAIter(int a1, int r, int n)
+{
+    int termo = a1;
+    for (int i = 0; i < n; i++)
+    {
+        printf("%d ", termo);
+        termo = termo + r;
+    }
+}`},
+{id:'R4',t:'recursao',k:'escrever',titulo:'P.A. recursiva',
+ enun:'Crie uma função <strong>recursiva</strong> que <strong>exibe na tela</strong> os n primeiros termos de uma P.A. de primeiro termo a1 e razão r.',
+ sig:'void exibePARec(int a1, int r, int n)',ctx:IO,
+ main:'int main()\n{\n    exibePARec(2, 3, 5);   // 2 5 8 11 14\n    return 0;\n}',
+ ck:[ck.exibe,rec('exibePARec'),ck.semLaco],
+ gab:RAW`
+void exibePARec(int a1, int r, int n)
+{
+    if (n == 0) return;
+    printf("%d ", a1);
+    exibePARec(a1 + r, r, n - 1);
+}`},
+{id:'R5',t:'recursao',k:'escrever',titulo:'Termo da P.G. recursivo',
+ enun:'Crie uma função <strong>recursiva</strong> que <strong>retorna</strong> o n-ésimo termo (n ≥ 1) de uma P.G. de primeiro termo a1 e razão q.',
+ sig:'int termoPGRec(int a1, int q, int n)',ctx:IO,
+ main:'int main()\n{\n    printf("%d", termoPGRec(3, 2, 4));   // 24\n    return 0;\n}',
+ ck:[rec('termoPGRec'),ck.semLaco,ck.retorna,ck.semPrintf],
+ gab:RAW`
+int termoPGRec(int a1, int q, int n)
+{
+    if (n == 1) return a1;
+    return q * termoPGRec(a1, q, n - 1);
+}`},
+{id:'R6',t:'recursao',k:'escrever',titulo:'P.G. iterativa',
+ enun:'Crie uma função <strong>iterativa</strong> que <strong>exibe na tela</strong> os n primeiros termos de uma P.G. de primeiro termo a1 e razão q.',
+ sig:'void exibePGIter(int a1, int q, int n)',ctx:IO,
+ main:'int main()\n{\n    exibePGIter(1, 3, 5);   // 1 3 9 27 81\n    return 0;\n}',
+ ck:[ck.exibe,ck.comLaco,naoRec('exibePGIter')],
+ gab:RAW`
+void exibePGIter(int a1, int q, int n)
+{
+    int termo = a1;
+    for (int i = 0; i < n; i++)
+    {
+        printf("%d ", termo);
+        termo = termo * q;
+    }
+}`},
+{id:'R7',t:'recursao',k:'escrever',titulo:'P.G. recursiva',
+ enun:'Crie uma função <strong>recursiva</strong> que <strong>exibe na tela</strong> os n primeiros termos de uma P.G. de primeiro termo a1 e razão q.',
+ sig:'void exibePGRec(int a1, int q, int n)',ctx:IO,
+ main:'int main()\n{\n    exibePGRec(1, 3, 5);   // 1 3 9 27 81\n    return 0;\n}',
+ ck:[ck.exibe,rec('exibePGRec'),ck.semLaco],
+ gab:RAW`
+void exibePGRec(int a1, int q, int n)
+{
+    if (n == 0) return;
+    printf("%d ", a1);
+    exibePGRec(a1 * q, q, n - 1);
+}`},
+{id:'R8',t:'recursao',k:'escrever',titulo:'Fibonacci recursivo',
+ enun:'Crie uma função <strong>recursiva</strong> que <strong>retorna</strong> o n-ésimo termo de Fibonacci, considerando fib(0) = 0 e fib(1) = 1.',
+ sig:'int fibRec(int n)',ctx:IO,
+ main:'int main()\n{\n    printf("%d", fibRec(7));   // 13\n    return 0;\n}',
+ ck:[rec('fibRec'),ck.semLaco,ck.retorna,ck.semPrintf],
+ gab:RAW`
+int fibRec(int n)
+{
+    if (n == 0) return 0;
+    if (n == 1) return 1;
+    return fibRec(n - 1) + fibRec(n - 2);
+}`},
+{id:'R9',t:'recursao',k:'escrever',titulo:'Fibonacci iterativo',
+ enun:'Crie uma função <strong>iterativa</strong> que <strong>exibe na tela</strong> os n primeiros termos da sequência de Fibonacci, começando em 0.',
+ sig:'void exibeFibIter(int n)',ctx:IO,
+ main:'int main()\n{\n    exibeFibIter(7);   // 0 1 1 2 3 5 8\n    return 0;\n}',
+ ck:[ck.exibe,ck.comLaco,naoRec('exibeFibIter')],
+ gab:RAW`
+void exibeFibIter(int n)
+{
+    int a = 0, b = 1, prox;
+    for (int i = 0; i < n; i++)
+    {
+        printf("%d ", a);
+        prox = a + b;
+        a = b;
+        b = prox;
+    }
+}`},
+{id:'R10',t:'recursao',k:'escrever',titulo:'Soma dos dígitos recursiva',
+ enun:'Crie uma função <strong>recursiva</strong> que <strong>retorna</strong> a soma dos dígitos de um inteiro n (n ≥ 0).',
+ sig:'int somaDigitosRec(int n)',ctx:IO,
+ main:'int main()\n{\n    printf("%d", somaDigitosRec(4721));   // 14\n    return 0;\n}',
+ ck:[rec('somaDigitosRec'),ck.semLaco,ck.retorna,tem(/%\s*10/,'Extrai o último dígito com n % 10.'),tem(/\/\s*10/,'Remove o último dígito com n / 10.')],
+ gab:RAW`
+int somaDigitosRec(int n)
+{
+    if (n == 0) return 0;
+    return n % 10 + somaDigitosRec(n / 10);
+}`},
+{id:'R11',t:'recursao',k:'escrever',titulo:'Contar dígitos iterativo',
+ enun:'Crie uma função <strong>iterativa</strong> que <strong>retorna</strong> a quantidade de dígitos de um inteiro n (n > 0).',
+ sig:'int contaDigitosIter(int n)',ctx:IO,
+ main:'int main()\n{\n    printf("%d", contaDigitosIter(90210));   // 5\n    return 0;\n}',
+ ck:[ck.comLaco,naoRec('contaDigitosIter'),ck.retorna,ck.semPrintf],
+ gab:RAW`
+int contaDigitosIter(int n)
+{
+    int cont = 0;
+    while (n > 0)
+    {
+        cont++;
+        n = n / 10;
+    }
+    return cont;
+}`},
+{id:'R12',t:'recursao',k:'escrever',titulo:'Contar dígitos recursivo',
+ enun:'Crie uma função <strong>recursiva</strong> que <strong>retorna</strong> a quantidade de dígitos de um inteiro n (n > 0).',
+ sig:'int contaDigitosRec(int n)',ctx:IO,
+ main:'int main()\n{\n    printf("%d", contaDigitosRec(90210));   // 5\n    return 0;\n}',
+ ck:[rec('contaDigitosRec'),ck.semLaco,ck.retorna,ck.semPrintf],
+ gab:RAW`
+int contaDigitosRec(int n)
+{
+    if (n < 10) return 1;
+    return 1 + contaDigitosRec(n / 10);
+}`},
+{id:'R13',t:'recursao',k:'escrever',titulo:'Inverter número recursivo',
+ enun:'Crie uma função <strong>recursiva</strong> que <strong>retorna</strong> o número n com os dígitos invertidos. A chamada inicial é <code>inverteRec(n, 0)</code>.',
+ sig:'int inverteRec(int n, int inv)',ctx:IO,
+ main:'int main()\n{\n    printf("%d", inverteRec(1234, 0));   // 4321\n    return 0;\n}',
+ ck:[rec('inverteRec'),ck.semLaco,ck.retorna,ck.semPrintf],
+ gab:RAW`
+int inverteRec(int n, int inv)
+{
+    if (n == 0) return inv;
+    return inverteRec(n / 10, inv * 10 + n % 10);
+}`},
+{id:'R14',t:'recursao',k:'escrever',titulo:'Número palíndromo iterativo',
+ enun:'Crie uma função <strong>iterativa</strong> que <strong>retorna 1</strong> se o inteiro n (n ≥ 0) for palíndromo e <strong>0</strong> caso contrário.',
+ sig:'int ehPalindromoNum(int n)',ctx:IO,
+ main:'int main()\n{\n    printf("%d %d", ehPalindromoNum(12321), ehPalindromoNum(123));   // 1 0\n    return 0;\n}',
+ ck:[ck.comLaco,naoRec('ehPalindromoNum'),ck.retorna,ck.semPrintf],
+ gab:RAW`
+int ehPalindromoNum(int n)
+{
+    int original = n, inv = 0;
+    while (n > 0)
+    {
+        inv = inv * 10 + n % 10;
+        n = n / 10;
+    }
+    if (inv == original) return 1;
+    return 0;
+}`},
+{id:'R15',t:'recursao',k:'escrever',titulo:'Soma dos dígitos iterativa',
+ enun:'Crie uma função <strong>iterativa</strong> que <strong>retorna</strong> a soma dos dígitos de um inteiro n (n ≥ 0).',
+ sig:'int somaDigitosIter(int n)',ctx:IO,
+ main:'int main()\n{\n    printf("%d", somaDigitosIter(4721));   // 14\n    return 0;\n}',
+ ck:[ck.comLaco,naoRec('somaDigitosIter'),ck.retorna,ck.semPrintf],
+ gab:RAW`
+int somaDigitosIter(int n)
+{
+    int soma = 0;
+    while (n > 0)
+    {
+        soma = soma + n % 10;
+        n = n / 10;
+    }
+    return soma;
+}`},
+{id:'R16',t:'recursao',k:'completar',titulo:'Casos base e chamada recursiva',
+ enun:'Complete as duas funções recursivas. Nenhuma delas pode ter laço.',
+ code:RAW`
+int fibRec(int n)
+{
+    if (n == 0) return ⟦0⟧;
+    if (n == 1) return ⟦1⟧;
+    return fibRec(⟦n - 1⟧) + fibRec(⟦n - 2⟧);
+}
+
+int somaDigitosRec(int n)
+{
+    if (n == ⟦0⟧) return 0;
+    return n ⟦%⟧ 10 + somaDigitosRec(n ⟦/⟧ 10);
+}`,
+ exp:'Toda recursão precisa de um caso base que para as chamadas. Em Fibonacci há dois (0 e 1). Na soma de dígitos, n % 10 pega o último dígito e n / 10 remove esse dígito para a próxima chamada.'},
+{id:'R17',t:'recursao',k:'erro',titulo:'Fatorial que sempre dá zero',
+ enun:'A função recursiva deveria retornar n!. Clique na linha com o erro.',
+ code:RAW`
+int fatorialRec(int n)
+{
+    if (n == 0) return 0;
+    return n * fatorialRec(n - 1);
+}`,bug:3,fix:'if (n == 0) return 1;',
+ exp:'0! = 1. Com return 0 no caso base, toda a cadeia de multiplicações termina multiplicando por zero e o resultado é sempre 0.'},
+{id:'R18',t:'recursao',k:'erro',titulo:'Recursão com laço',
+ enun:'A função deveria exibir os n primeiros termos da P.A. de forma recursiva. Clique na linha que zera a questão.',
+ code:RAW`
+void exibePARec(int a1, int r, int n)
+{
+    if (n == 0) return;
+    while (n > 0)
+    {
+        printf("%d ", a1);
+        exibePARec(a1 + r, r, n - 1);
+        n--;
+    }
+}`,bug:4,fix:'(sem laço) printf("%d ", a1); exibePARec(a1 + r, r, n - 1);',
+ exp:'Função recursiva com laço zera a questão. Além disso, o while faz a recursão repetir termos. A repetição tem que vir só da chamada recursiva.'},
+
+/* ---------- VETORES ---------- */
+{id:'P1',t:'ponteiros',k:'escrever',titulo:'Exibir de trás para frente',
+ enun:'Crie uma função que <strong>exibe na tela</strong> os n elementos de um vetor de inteiros, do último para o primeiro.',
+ sig:'void exibeInverso(int *v, int n)',ctx:IO,
+ main:'int main()\n{\n    int v[5] = {1, 2, 3, 4, 5};\n    exibeInverso(v, 5);   // 5 4 3 2 1\n    return 0;\n}',
+ ck:[ck.exibe,ck.comLaco,tem(/n\s*-\s*1/,'Começa no índice n - 1.'),tem(/>=\s*0|>\s*-\s*1/,'Vai até o índice 0 (i >= 0).')],
+ gab:RAW`
+void exibeInverso(int *v, int n)
+{
+    for (int i = n - 1; i >= 0; i--)
+        printf("%d ", v[i]);
+}`},
+{id:'P2',t:'ponteiros',k:'escrever',titulo:'Maior valor',
+ enun:'Crie uma função que <strong>retorna</strong> o maior valor de um vetor de n inteiros.',
+ sig:'int maiorValor(int *v, int n)',ctx:IO,
+ main:'int main()\n{\n    int v[5] = {-4, -9, -1, -7, -3};\n    printf("%d", maiorValor(v, 5));   // -1\n    return 0;\n}',
+ ck:[ck.retorna,ck.comLaco,ck.semPrintf,{msg:'Não inicializa o maior com 0 (falha com negativos).',crit:false,f:s=>!/maior\s*=\s*0\s*[;,]/.test(s)}],
+ gab:RAW`
+int maiorValor(int *v, int n)
+{
+    int maior = v[0];
+    for (int i = 1; i < n; i++)
+        if (v[i] > maior)
+            maior = v[i];
+    return maior;
+}`},
+{id:'P3',t:'ponteiros',k:'escrever',titulo:'Multiplicar vetor',
+ enun:'Crie uma função que multiplica cada um dos n elementos do vetor por k, alterando o próprio vetor.',
+ sig:'void multiplicaVetor(int *v, int n, int k)',ctx:IO,
+ main:'int main()\n{\n    int v[3] = {1, 2, 3};\n    multiplicaVetor(v, 3, 10);   // v = {10, 20, 30}\n    return 0;\n}',
+ ck:[ck.comLaco,ck.semPrintf,tem(/\*=\s*k|=\s*v\s*\[\s*\w+\s*\]\s*\*\s*k|=\s*k\s*\*\s*v\s*\[/,'Multiplica cada v[i] por k.')],
+ gab:RAW`
+void multiplicaVetor(int *v, int n, int k)
+{
+    for (int i = 0; i < n; i++)
+        v[i] = v[i] * k;
+}`},
+{id:'P4',t:'ponteiros',k:'escrever',titulo:'Inverter vetor no lugar',
+ enun:'Crie uma função que <strong>inverte a ordem</strong> dos n elementos do próprio vetor (sem usar outro vetor).',
+ sig:'void inverteVetor(int *v, int n)',ctx:IO,
+ main:'int main()\n{\n    int v[5] = {1, 2, 3, 4, 5};\n    inverteVetor(v, 5);   // v = {5, 4, 3, 2, 1}\n    return 0;\n}',
+ ck:[ck.comLaco,tem(/n\s*\/\s*2/,'Troca só até a metade (i < n / 2).'),ck.semPrintf],
+ gab:RAW`
+void inverteVetor(int *v, int n)
+{
+    int aux;
+    for (int i = 0; i < n / 2; i++)
+    {
+        aux = v[i];
+        v[i] = v[n - 1 - i];
+        v[n - 1 - i] = aux;
+    }
+}`},
+{id:'P5',t:'ponteiros',k:'escrever',titulo:'Produto dos elementos',
+ enun:'Crie uma função que <strong>retorna</strong> o produto de todos os n elementos de um vetor de inteiros.',
+ sig:'int produtoVetor(int *v, int n)',ctx:IO,
+ main:'int main()\n{\n    int v[4] = {2, 3, 1, 5};\n    printf("%d", produtoVetor(v, 4));   // 30\n    return 0;\n}',
+ ck:[ck.retorna,ck.comLaco,ck.semPrintf,tem(/=\s*1\s*[;,]/,'Acumulador começa em 1.')],
+ gab:RAW`
+int produtoVetor(int *v, int n)
+{
+    int prod = 1;
+    for (int i = 0; i < n; i++)
+        prod = prod * v[i];
+    return prod;
+}`},
+{id:'P6',t:'ponteiros',k:'escrever',titulo:'Posição do menor',
+ enun:'Crie uma função que <strong>retorna o índice</strong> do menor valor de um vetor de n inteiros.',
+ sig:'int posicaoMenor(int *v, int n)',ctx:IO,
+ main:'int main()\n{\n    int v[5] = {8, 3, 9, 1, 4};\n    printf("%d", posicaoMenor(v, 5));   // 3\n    return 0;\n}',
+ ck:[ck.retorna,ck.comLaco,ck.semPrintf],
+ gab:RAW`
+int posicaoMenor(int *v, int n)
+{
+    int pos = 0;
+    for (int i = 1; i < n; i++)
+        if (v[i] < v[pos])
+            pos = i;
+    return pos;
+}`},
+{id:'P7',t:'ponteiros',k:'completar',titulo:'Percorrer e inverter',
+ enun:'Complete com o controle exato de índices: de 0 até n - 1.',
+ code:RAW`
+void exibeVetor(int *v, int n)
+{
+    for (int i = ⟦0⟧; i < ⟦n⟧; i++)
+        printf("%d ", ⟦v[i]⟧);
+}
+
+void inverteVetor(int *v, int n)
+{
+    int aux;
+    for (int i = 0; i < ⟦n / 2⟧; i++)
+    {
+        aux = v[i];
+        v[i] = v[⟦n - 1 - i||n - i - 1⟧];
+        v[n - 1 - i] = ⟦aux⟧;
+    }
+}`,
+ exp:'Os índices válidos vão de 0 até n - 1, por isso a condição é i < n. Para inverter, troca-se a posição i com n - 1 - i e só até a metade; indo até n, cada par seria trocado duas vezes e o vetor voltaria ao original.'},
+{id:'P8',t:'ponteiros',k:'erro',titulo:'Uma posição a mais',
+ enun:'A função deveria retornar a soma dos n elementos. Clique na linha com o erro.',
+ code:RAW`
+int somaVetor(int *v, int n)
+{
+    int soma = 0;
+    for (int i = 0; i <= n; i++)
+        soma = soma + v[i];
+    return soma;
+}`,bug:4,fix:'for (int i = 0; i < n; i++)',
+ exp:'Os índices válidos vão de 0 até n - 1. Com i <= n o laço lê v[n], uma posição fora do vetor (lixo de memória).'},
+{id:'P9',t:'ponteiros',k:'erro',titulo:'Maior que falha com negativos',
+ enun:'A função deveria retornar o maior valor de qualquer vetor de inteiros. Clique na linha com o erro.',
+ code:RAW`
+int maiorValor(int *v, int n)
+{
+    int maior = 0;
+    for (int i = 0; i < n; i++)
+        if (v[i] > maior)
+            maior = v[i];
+    return maior;
+}`,bug:3,fix:'int maior = v[0];',
+ exp:'Começar com 0 quebra o caso em que todos os valores são negativos: a função retornaria 0, que nem está no vetor. O maior deve começar com o primeiro elemento.'},
+
+/* ---------- STRINGS ---------- */
+{id:'T1',t:'strings',k:'escrever',titulo:'Tamanho da string',
+ enun:'Sem usar <code>&lt;string.h&gt;</code>, crie uma função que <strong>retorna</strong> a quantidade de caracteres da string, contando até o <code>\'\\0\'</code>.',
+ sig:'int tamanho(char *s)',ctx:IO,
+ main:'int main()\n{\n    printf("%d", tamanho("fatec"));   // 5\n    return 0;\n}',
+ ck:[ck.semStringH,ck.barra0,ck.comLaco,ck.retorna,ck.semPrintf],
+ gab:RAW`
+int tamanho(char *s)
+{
+    int i = 0;
+    while (s[i] != '\0')
+        i++;
+    return i;
+}`},
+{id:'T2',t:'strings',k:'escrever',titulo:'Copiar string',
+ enun:'Sem usar <code>&lt;string.h&gt;</code>, crie uma função que copia a string <code>origem</code> para <code>destino</code>, incluindo o terminador.',
+ sig:'void copiaString(char *destino, char *origem)',ctx:IO,
+ main:'int main()\n{\n    char d[20];\n    copiaString(d, "Mogi");\n    printf("%s", d);   // Mogi\n    return 0;\n}',
+ ck:[ck.semStringH,ck.barra0,ck.comLaco,tem(/destino\s*\[\s*\w+\s*\]\s*=\s*'\\0'|\*\s*\(?\s*destino[^=;]*\)?\s*=\s*'\\0'/,"Grava o '\\0' no final do destino.")],
+ gab:RAW`
+void copiaString(char *destino, char *origem)
+{
+    int i = 0;
+    while (origem[i] != '\0')
+    {
+        destino[i] = origem[i];
+        i++;
+    }
+    destino[i] = '\0';
+}`},
+{id:'T3',t:'strings',k:'escrever',titulo:'Comparar strings',
+ enun:'Sem usar <code>&lt;string.h&gt;</code>, crie uma função que <strong>retorna 1</strong> se as strings forem iguais e <strong>0</strong> caso contrário.',
+ sig:'int comparaStrings(char *a, char *b)',ctx:IO,
+ main:'int main()\n{\n    printf("%d %d", comparaStrings("ads", "ads"), comparaStrings("ads", "adsx"));   // 1 0\n    return 0;\n}',
+ ck:[ck.semStringH,ck.barra0,ck.comLaco,ck.retorna,ck.semPrintf],
+ gab:RAW`
+int comparaStrings(char *a, char *b)
+{
+    int i = 0;
+    while (a[i] != '\0' && b[i] != '\0')
+    {
+        if (a[i] != b[i]) return 0;
+        i++;
+    }
+    if (a[i] == b[i]) return 1;
+    return 0;
+}`},
+{id:'T4',t:'strings',k:'escrever',titulo:'Palíndromo simples',
+ enun:'Sem usar <code>&lt;string.h&gt;</code>, crie uma função que <strong>retorna 1</strong> se a string for palíndroma e <strong>0</strong> caso contrário (sem espaços, diferencia maiúsculas).',
+ sig:'int ehPalindromo(char *s)',ctx:IO,
+ main:'int main()\n{\n    printf("%d %d", ehPalindromo("arara"), ehPalindromo("fatec"));   // 1 0\n    return 0;\n}',
+ ck:[ck.semStringH,ck.barra0,ck.comLaco,ck.retorna,ck.semPrintf],
+ gab:RAW`
+int ehPalindromo(char *s)
+{
+    int fim = 0;
+    while (s[fim] != '\0')
+        fim++;
+    fim--;
+    int ini = 0;
+    while (ini < fim)
+    {
+        if (s[ini] != s[fim]) return 0;
+        ini++;
+        fim--;
+    }
+    return 1;
+}`},
+{id:'T5',t:'strings',k:'escrever',titulo:'Palíndromo de frase',
+ enun:'Sem usar <code>&lt;string.h&gt;</code> nem <code>&lt;ctype.h&gt;</code>, crie uma função que <strong>retorna 1</strong> se a frase for palíndroma <strong>ignorando espaços e maiúsculas/minúsculas</strong>, e <strong>0</strong> caso contrário.',
+ sig:'int ehPalindromoFrase(char *s)',ctx:IO,
+ main:'int main()\n{\n    printf("%d", ehPalindromoFrase("Ame a ema"));   // 1\n    return 0;\n}',
+ ck:[ck.semStringH,ck.barra0,ck.comLaco,ck.retorna,tem(/' '/,"Trata o espaço ' '."),tem(/32|'a'\s*-\s*'A'|'A'\s*-\s*'a'|'Z'|'z'/,'Converte maiúscula/minúscula manualmente.')],
+ gab:RAW`
+int ehPalindromoFrase(char *s)
+{
+    int ini = 0, fim = 0;
+    char a, b;
+    while (s[fim] != '\0')
+        fim++;
+    fim--;
+    while (ini < fim)
+    {
+        if (s[ini] == ' ') { ini++; continue; }
+        if (s[fim] == ' ') { fim--; continue; }
+        a = s[ini];
+        b = s[fim];
+        if (a >= 'A' && a <= 'Z') a = a + 32;
+        if (b >= 'A' && b <= 'Z') b = b + 32;
+        if (a != b) return 0;
+        ini++;
+        fim--;
+    }
+    return 1;
+}`},
+{id:'T6',t:'strings',k:'escrever',titulo:'Contar ocorrências',
+ enun:'Sem usar <code>&lt;string.h&gt;</code>, crie uma função que <strong>retorna</strong> quantas vezes o caractere c aparece na string.',
+ sig:'int contaChar(char *s, char c)',ctx:IO,
+ main:"int main()\n{\n    printf(\"%d\", contaChar(\"banana\", 'a'));   // 3\n    return 0;\n}",
+ ck:[ck.semStringH,ck.barra0,ck.comLaco,ck.retorna,ck.semPrintf],
+ gab:RAW`
+int contaChar(char *s, char c)
+{
+    int cont = 0;
+    for (int i = 0; s[i] != '\0'; i++)
+        if (s[i] == c)
+            cont++;
+    return cont;
+}`},
+{id:'T7',t:'strings',k:'escrever',titulo:'Exibir string invertida',
+ enun:'Sem usar <code>&lt;string.h&gt;</code>, crie uma função que <strong>exibe na tela</strong> a string de trás para frente.',
+ sig:'void exibeInvertida(char *s)',ctx:IO,
+ main:'int main()\n{\n    exibeInvertida("Fatec");   // cetaF\n    return 0;\n}',
+ ck:[ck.exibe,ck.semStringH,ck.barra0,ck.comLaco],
+ gab:RAW`
+void exibeInvertida(char *s)
+{
+    int n = 0;
+    while (s[n] != '\0')
+        n++;
+    for (int i = n - 1; i >= 0; i--)
+        printf("%c", s[i]);
+    printf("\n");
+}`},
+{id:'T8',t:'strings',k:'completar',titulo:'Tamanho e cópia',
+ enun:"Complete as duas funções. Nada de <string.h>.",
+ code:RAW`
+int tamanho(char *s)
+{
+    int i = ⟦0⟧;
+    while (s[i] != ⟦'\0'⟧)
+        i⟦++||+=1⟧;
+    return ⟦i⟧;
+}
+
+void copiaString(char *destino, char *origem)
+{
+    int i;
+    for (i = 0; origem[i] != '\0'; i++)
+        destino[i] = ⟦origem[i]⟧;
+    destino[⟦i⟧] = '\0';
+}`,
+ exp:"A string termina no caractere '\\0' (valor 0), não no caractere '0'. Na cópia, o laço para ANTES de copiar o '\\0', por isso ele é gravado depois, exatamente na posição i onde o laço parou."},
+{id:'T9',t:'strings',k:'erro',titulo:'Zero que não é terminador',
+ enun:'A função deveria retornar o tamanho da string. Clique na linha com o erro.',
+ code:RAW`
+int tamanho(char *s)
+{
+    int cont = 0;
+    while (s[cont] != '0')
+        cont++;
+    return cont;
+}`,bug:4,fix:"while (s[cont] != '\\0')",
+ exp:"'0' é o caractere dígito zero (código 48). O terminador é '\\0' (código 0). Do jeito que está, a função passa do fim da string e só para se encontrar um dígito 0 na memória."},
+{id:'T10',t:'strings',k:'erro',titulo:'Terminador fora do lugar',
+ enun:'A função deveria copiar origem para destino. Clique na linha com o erro.',
+ code:RAW`
+void copiaString(char *destino, char *origem)
+{
+    int i;
+    for (i = 0; origem[i] != '\0'; i++)
+        destino[i] = origem[i];
+    destino[i + 1] = '\0';
+}`,bug:6,fix:"destino[i] = '\\0';",
+ exp:"Quando o laço termina, i já é a posição do '\\0' da origem. Gravando em i + 1 fica uma posição com lixo antes do terminador."},
+
+/* ---------- MATRIZES ---------- */
+{id:'X1',t:'matrizes',k:'escrever',titulo:'Soma de matrizes 3x3',
+ enun:'Crie uma função que calcula a <strong>soma</strong> das matrizes 3x3 <code>a</code> e <code>b</code>, guardando o resultado em <code>c</code>.',
+ sig:'void somaMatriz(int a[3][3], int b[3][3], int c[3][3])',ctx:IO,
+ main:'int main()\n{\n    int a[3][3] = {{1,2,3},{4,5,6},{7,8,9}};\n    int b[3][3] = {{1,1,1},{1,1,1},{1,1,1}};\n    int c[3][3];\n    somaMatriz(a, b, c);\n    return 0;\n}',
+ ck:[tem(/\bfor\b[\s\S]*\bfor\b/,'Dois laços aninhados (i, j).'),tem(/c\s*\[\s*i\s*\]\s*\[\s*j\s*\]\s*=\s*a\s*\[\s*i\s*\]\s*\[\s*j\s*\]\s*\+\s*b\s*\[\s*i\s*\]\s*\[\s*j\s*\]/,'c[i][j] = a[i][j] + b[i][j].'),ck.semPrintf],
+ gab:RAW`
+void somaMatriz(int a[3][3], int b[3][3], int c[3][3])
+{
+    for (int i = 0; i < 3; i++)
+        for (int j = 0; j < 3; j++)
+            c[i][j] = a[i][j] + b[i][j];
+}`},
+{id:'X2',t:'matrizes',k:'escrever',titulo:'Subtração de matrizes 2x2',
+ enun:'Crie uma função que calcula <code>c = a - b</code> para matrizes 2x2.',
+ sig:'void subtraiMatriz(int a[2][2], int b[2][2], int c[2][2])',ctx:IO,
+ main:'int main()\n{\n    int a[2][2] = {{5,6},{7,8}}, b[2][2] = {{1,2},{3,4}}, c[2][2];\n    subtraiMatriz(a, b, c);   // {{4,4},{4,4}}\n    return 0;\n}',
+ ck:[tem(/\bfor\b[\s\S]*\bfor\b/,'Dois laços aninhados (i, j).'),tem(/<\s*2/,'Limite dos índices é 2 (0 e 1).'),ck.semPrintf],
+ gab:RAW`
+void subtraiMatriz(int a[2][2], int b[2][2], int c[2][2])
+{
+    for (int i = 0; i < 2; i++)
+        for (int j = 0; j < 2; j++)
+            c[i][j] = a[i][j] - b[i][j];
+}`},
+{id:'X3',t:'matrizes',k:'escrever',titulo:'Multiplicação de matrizes 3x3',
+ enun:'Crie uma função que calcula o <strong>produto</strong> das matrizes 3x3 <code>a</code> e <code>b</code>, guardando o resultado em <code>c</code>.',
+ sig:'void multiplicaMatriz(int a[3][3], int b[3][3], int c[3][3])',ctx:IO,
+ main:'int main()\n{\n    int a[3][3] = {{1,2,3},{4,5,6},{7,8,9}};\n    int b[3][3] = {{1,0,0},{0,1,0},{0,0,1}};\n    int c[3][3];\n    multiplicaMatriz(a, b, c);   // c == a\n    return 0;\n}',
+ ck:[ck.tresLacos,ck.zeraC,tem(/a\s*\[\s*i\s*\]\s*\[\s*k\s*\]\s*\*\s*b\s*\[\s*k\s*\]\s*\[\s*j\s*\]/,'Acumula a[i][k] * b[k][j].'),tem(/\+=|=\s*c\s*\[\s*i\s*\]\s*\[\s*j\s*\]\s*\+/,'Acumula (+=) em c[i][j].'),ck.semPrintf],
+ gab:RAW`
+void multiplicaMatriz(int a[3][3], int b[3][3], int c[3][3])
+{
+    for (int i = 0; i < 3; i++)
+        for (int j = 0; j < 3; j++)
+        {
+            c[i][j] = 0;
+            for (int k = 0; k < 3; k++)
+                c[i][j] = c[i][j] + a[i][k] * b[k][j];
+        }
+}`},
+{id:'X4',t:'matrizes',k:'escrever',titulo:'Diagonal principal 4x4',
+ enun:'Crie uma função que <strong>retorna</strong> a soma dos elementos da <strong>diagonal principal</strong> de uma matriz 4x4.',
+ sig:'int somaDiagonalPrincipal(int m[4][4])',ctx:IO,
+ main:'int main()\n{\n    int m[4][4] = {{1,0,0,0},{0,2,0,0},{0,0,3,0},{0,0,0,4}};\n    printf("%d", somaDiagonalPrincipal(m));   // 10\n    return 0;\n}',
+ ck:[ck.diagP,ck.retorna,ck.semPrintf],
+ gab:RAW`
+int somaDiagonalPrincipal(int m[4][4])
+{
+    int soma = 0;
+    for (int i = 0; i < 4; i++)
+        for (int j = 0; j < 4; j++)
+            if (i == j)
+                soma = soma + m[i][j];
+    return soma;
+}`},
+{id:'X5',t:'matrizes',k:'escrever',titulo:'Diagonal secundária NxN',
+ enun:'Crie uma função que <strong>retorna</strong> a soma dos elementos da <strong>diagonal secundária</strong> de uma matriz NxN (N = 4, já definido).',
+ sig:'int somaDiagonalSecundaria(int m[N][N])',ctx:'#include <stdio.h>\n#define N 4',
+ main:'int main()\n{\n    int m[N][N] = {{0,0,0,1},{0,0,2,0},{0,3,0,0},{4,0,0,0}};\n    printf("%d", somaDiagonalSecundaria(m));   // 10\n    return 0;\n}',
+ ck:[ck.diagS,ck.retorna,ck.semPrintf],
+ gab:RAW`
+int somaDiagonalSecundaria(int m[N][N])
+{
+    int soma = 0;
+    for (int i = 0; i < N; i++)
+        for (int j = 0; j < N; j++)
+            if (i + j == N - 1)
+                soma = soma + m[i][j];
+    return soma;
+}`},
+{id:'X6',t:'matrizes',k:'escrever',titulo:'Exibir matriz 3x3',
+ enun:'Crie uma função que <strong>exibe na tela</strong> uma matriz 3x3 em formato de tabela (uma linha da matriz por linha da tela).',
+ sig:'void exibeMatriz(int m[3][3])',ctx:IO,
+ main:'int main()\n{\n    int m[3][3] = {{1,2,3},{4,5,6},{7,8,9}};\n    exibeMatriz(m);\n    return 0;\n}',
+ ck:[ck.exibe,tem(/\bfor\b[\s\S]*\bfor\b/,'Dois laços aninhados (i, j).'),{msg:'Quebra de linha ao fim de cada linha.',crit:false,f:(s,c)=>/\\n/.test(c)}],
+ gab:RAW`
+void exibeMatriz(int m[3][3])
+{
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+            printf("%4d", m[i][j]);
+        printf("\n");
+    }
+}`},
+{id:'X7',t:'matrizes',k:'escrever',titulo:'Multiplicação 2x2',
+ enun:'Crie uma função que calcula o <strong>produto</strong> das matrizes 2x2 <code>a</code> e <code>b</code>, guardando o resultado em <code>c</code>.',
+ sig:'void multiplica2x2(int a[2][2], int b[2][2], int c[2][2])',ctx:IO,
+ main:'int main()\n{\n    int a[2][2] = {{1,2},{3,4}}, b[2][2] = {{5,6},{7,8}}, c[2][2];\n    multiplica2x2(a, b, c);   // {{19,22},{43,50}}\n    return 0;\n}',
+ ck:[ck.tresLacos,ck.zeraC,tem(/a\s*\[\s*i\s*\]\s*\[\s*k\s*\]\s*\*\s*b\s*\[\s*k\s*\]\s*\[\s*j\s*\]/,'Acumula a[i][k] * b[k][j].'),ck.semPrintf],
+ gab:RAW`
+void multiplica2x2(int a[2][2], int b[2][2], int c[2][2])
+{
+    for (int i = 0; i < 2; i++)
+        for (int j = 0; j < 2; j++)
+        {
+            c[i][j] = 0;
+            for (int k = 0; k < 2; k++)
+                c[i][j] = c[i][j] + a[i][k] * b[k][j];
+        }
+}`},
+{id:'X8',t:'matrizes',k:'completar',titulo:'Produto e diagonais',
+ enun:'Complete a multiplicação e a condição das diagonais.',
+ code:RAW`
+#define N 3
+
+void multiplica(int a[N][N], int b[N][N], int c[N][N])
+{
+    for (int i = 0; i < N; i++)
+        for (int j = 0; j < N; j++)
+        {
+            c[i][j] = ⟦0⟧;
+            for (int k = 0; k < N; k++)
+                c[i][j] += a[i][⟦k⟧] * b[⟦k⟧][j];
+        }
+}
+
+int somaDiagonais(int m[N][N])
+{
+    int soma = 0;
+    for (int i = 0; i < N; i++)
+        for (int j = 0; j < N; j++)
+            if (i ⟦==⟧ j || i + j == ⟦N - 1||N-1⟧)
+                soma += m[i][j];
+    return soma;
+}`,
+ exp:'Na multiplicação, c[i][j] começa em zero e acumula a linha i de a vezes a coluna j de b, variando k. A diagonal principal é i == j; a secundária é i + j == N - 1. Com || o elemento central (que está nas duas) é somado uma vez só.'},
+{id:'X9',t:'matrizes',k:'erro',titulo:'Produto que não acumula',
+ enun:'A função deveria multiplicar as matrizes a e b. Clique na linha com o erro.',
+ code:RAW`
+void multiplicaMatriz(int a[3][3], int b[3][3], int c[3][3])
+{
+    for (int i = 0; i < 3; i++)
+        for (int j = 0; j < 3; j++)
+        {
+            c[i][j] = 0;
+            for (int k = 0; k < 3; k++)
+                c[i][j] = a[i][k] * b[k][j];
+        }
+}`,bug:8,fix:'c[i][j] = c[i][j] + a[i][k] * b[k][j];',
+ exp:'Com = em vez de acumular, cada volta do k sobrescreve o valor anterior e c[i][j] fica só com o último produto (k = 2).'},
+{id:'X10',t:'matrizes',k:'erro',titulo:'Diagonal secundária deslocada',
+ enun:'A função deveria somar a diagonal secundária de uma matriz NxN. Clique na linha com o erro.',
+ code:RAW`
+int somaDiagonalSecundaria(int m[N][N])
+{
+    int soma = 0;
+    for (int i = 0; i < N; i++)
+        for (int j = 0; j < N; j++)
+            if (i + j == N)
+                soma = soma + m[i][j];
+    return soma;
+}`,bug:6,fix:'if (i + j == N - 1)',
+ exp:'Como os índices vão de 0 a N - 1, na diagonal secundária i + j vale N - 1. Com == N a soma pega uma diagonal deslocada e perde o elemento m[0][N-1].'}
+];
+const QMAP=Object.fromEntries(Q.map(q=>[q.id,q]));
+
+/* ============ progresso ============ */
+const BLANK=()=>({v:1,q:{},dias:[],sims:[],log:{},evo:{},meta:{prova:'',diaria:6},marcos:{}});
+function readiness(){ return Q.reduce((s,q)=>s+(store.data.q[q.id]?.best??0),0)/(Q.length*10); }
+const store={
+  data:BLANK(), ref:null, timer:null,
+  load(){ const d=lsGet('p3c:progresso',null); this.data=Object.assign(BLANK(),d&&d.q?d:{}); this.data.meta=Object.assign({prova:'',diaria:6},this.data.meta);
+    if(Object.keys(this.data.q).length&&this.data.evo[today()]==null) this.data.evo[today()]=Math.round(readiness()*1000)/10; },
+  save(){ lsSet('p3c:progresso',this.data); if(this.ref){ clearTimeout(this.timer); this.timer=setTimeout(()=>{ this.ref.set(JSON.parse(JSON.stringify(this.data))).catch(()=>{}); },600);} },
+  merge(r){ const a=this.data; r=Object.assign(BLANK(),r);
+    for(const [id,x] of Object.entries(r.q||{})){ const y=a.q[id]; if(!y){a.q[id]=x;continue;}
+      a.q[id]={best:Math.max(x.best??0,y.best??0),n:Math.max(x.n||0,y.n||0),last:(x.ts||0)>(y.ts||0)?x.last:y.last,ts:Math.max(x.ts||0,y.ts||0)}; }
+    a.dias=[...new Set([...(a.dias||[]),...(r.dias||[])])].sort();
+    const ts=new Set((a.sims||[]).map(s=>s.ts)); for(const s of r.sims||[]) if(!ts.has(s.ts)) a.sims.push(s);
+    a.sims.sort((x,y)=>x.ts-y.ts);
+    for(const [d,x] of Object.entries(r.log||{})){ const y=a.log[d]; a.log[d]=y?{n:Math.max(x.n||0,y.n||0),dez:Math.max(x.dez||0,y.dez||0)}:x; }
+    for(const [d,x] of Object.entries(r.evo||{})) a.evo[d]=Math.max(x,a.evo[d]??0);
+    a.meta=Object.assign({prova:'',diaria:6},a.meta,r.meta||{});
+    for(const [k,t] of Object.entries(r.marcos||{})) a.marcos[k]=Math.min(t,a.marcos[k]??Infinity); },
+  record(id,nota){
+    const before=readiness(), prevBest=this.data.q[id]?.best, t=QMAP[id].t, tBefore=topicStats(t).pct;
+    const q=this.data.q[id]||{best:0,n:0}; q.best=Math.max(q.best||0,nota); q.last=nota; q.n=(q.n||0)+1; q.ts=Date.now(); this.data.q[id]=q;
+    const d=today(); if(!this.data.dias.includes(d)) this.data.dias.push(d);
+    const lg=this.data.log[d]||{n:0,dez:0}; lg.n++; if(nota===10) lg.dez++; this.data.log[d]=lg;
+    const after=readiness(); this.data.evo[d]=Math.round(after*1000)/10;
+    const info={before,after,nota,prevBest,t,tBefore,tAfter:topicStats(t).pct,first:prevBest==null,novaDom:nota===10&&prevBest!==10,melhorou:prevBest!=null&&nota>prevBest};
+    info.marcos=this.checkMarcos(); this.save(); return info; },
+  checkMarcos(silent){ const novos=[]; for(const m of MARCOS){ if(!this.data.marcos[m.k]&&m.ok()){ this.data.marcos[m.k]=Date.now(); novos.push(m);} }
+    if(novos.length&&!silent) toast('Marco desbloqueado: '+novos.map(m=>m.nome).join(' · ')); return novos; },
+  connect(){}
+};
+const domCount=()=>Q.filter(q=>store.data.q[q.id]?.best===10).length;
+const MARCOS=[
+  {k:'primeiro10',nome:'Primeiro 10',desc:'Tirar 10 em uma questão.',ok:()=>domCount()>=1},
+  {k:'dom10',nome:'10 dominadas',desc:'Dez questões com nota 10.',ok:()=>domCount()>=10},
+  {k:'dom25',nome:'25 dominadas',desc:'Vinte e cinco questões com 10.',ok:()=>domCount()>=25},
+  {k:'domMetade',nome:'Metade do banco',desc:'Metade das questões com 10.',ok:()=>domCount()>=Math.ceil(Q.length/2)},
+  {k:'topico',nome:'Conteúdo fechado',desc:'Um conteúdo inteiro com 10.',ok:()=>Object.keys(TOPICS).some(t=>topicStats(t).pct>=1)},
+  {k:'domTudo',nome:'Banco fechado',desc:'Todas as questões com 10.',ok:()=>domCount()===Q.length},
+  {k:'metaDia',nome:'Meta do dia',desc:'Cumprir a meta diária.',ok:()=>(store.data.log[today()]?.n||0)>=store.data.meta.diaria},
+  {k:'seq3',nome:'3 dias seguidos',desc:'Treinar três dias sem pular.',ok:()=>streak()>=3},
+  {k:'seq7',nome:'7 dias seguidos',desc:'Uma semana sem pular.',ok:()=>streak()>=7},
+  {k:'sim6',nome:'Simulado acima de 6',desc:'Média 6 ou mais.',ok:()=>store.data.sims.some(s=>s.media>=6)},
+  {k:'sim8',nome:'Simulado acima de 8',desc:'Média 8 ou mais.',ok:()=>store.data.sims.some(s=>s.media>=8)},
+  {k:'sim10',nome:'Simulado 10',desc:'Gabaritar um simulado.',ok:()=>store.data.sims.some(s=>s.media>=10)}
+];
+const best=id=>store.data.q[id]?.best;
+function topicStats(t){ const qs=Q.filter(q=>q.t===t); const sum=qs.reduce((s,q)=>s+(best(q.id)??0),0); const dom=qs.filter(q=>best(q.id)===10).length; return {pct:sum/(qs.length*10),dom,tot:qs.length}; }
+
+/* ============ correção automática ============ */
+function prep(code){ const c=code.replace(/\/\*[\s\S]*?\*\//g,'').replace(/\/\/[^\n]*/g,''); const s=c.replace(/"(?:\\.|[^"\\\n])*"/g,'""'); return {c,s:s.trim()}; }
+function sigCheck(q){ const m=q.sig.match(/^(.*?)(\w+)\s*\(/); const key=(m[1]+m[2]+'(').replace(/\s+/g,''); return {msg:`Assinatura: ${q.sig}`,crit:false,f:(s)=>s.replace(/\s+/g,'').includes(key)}; }
+function autoCheck(q,code){
+  const {c,s}=prep(code);
+  const body=s.replace(/#[^\n]*/g,'').replace(/^[^{]*\{/,'').replace(/\}\s*$/,'').replace(/\s+/g,'');
+  const list=[sigCheck(q),{msg:'Função com corpo escrito.',crit:true,f:()=>body.length>=8},...q.ck];
+  const res=list.map(k=>({msg:k.msg,crit:k.crit,ok:!!k.f(s,c)}));
+  const critFail=res.some(r=>!r.ok&&r.crit), fails=res.filter(r=>!r.ok).length;
+  const nota=critFail?0:Math.max(0,10-1.5*fails);
+  return {res,nota:Math.round(nota*10)/10,critFail};
+}
+
+/* ============ editor ============ */
+function mountEditor(host,{value,onChange,onSubmit,label}){
+  host.innerHTML=`<div class="ed"><div class="gut" aria-hidden="true"></div><textarea placeholder="Escreva a função completa aqui." spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" aria-label="${esc(label||'Seu código')}"></textarea></div>`;
+  const ta=host.querySelector('textarea'), gut=host.querySelector('.gut');
+  const upd=()=>{ const n=ta.value.split('\n').length; gut.textContent=Array.from({length:n},(_,i)=>i+1).join('\n'); gut.scrollTop=ta.scrollTop; };
+  ta.value=value; upd();
+  ta.addEventListener('input',()=>{upd();onChange&&onChange(ta.value);});
+  ta.addEventListener('scroll',()=>{gut.scrollTop=ta.scrollTop;});
+  ta.addEventListener('keydown',e=>{
+    const v=ta.value,a=ta.selectionStart,b=ta.selectionEnd;
+    const ins=(txt,from=a,to=b,cur)=>{ ta.setRangeText(txt,from,to,'end'); if(cur!=null) ta.selectionStart=ta.selectionEnd=cur; ta.dispatchEvent(new Event('input')); };
+    if((e.metaKey||e.ctrlKey)&&e.key==='Enter'){ e.preventDefault(); onSubmit&&onSubmit(); return; }
+    if(e.key==='Tab'){ e.preventDefault();
+      const ls=v.lastIndexOf('\n',a-1)+1;
+      if(e.shiftKey){ const m=v.slice(ls).match(/^ {1,4}/); if(m) ins('',ls,ls+m[0].length,Math.max(ls,a-m[0].length)); }
+      else ins('    '); return; }
+    if(e.key==='Enter'&&!e.altKey){ e.preventDefault();
+      const ls=v.lastIndexOf('\n',a-1)+1, line=v.slice(ls,a), ind=line.match(/^\s*/)[0];
+      const extra=/\{\s*$/.test(line)?'    ':'';
+      if(extra&&v[b]==='}'){ ins('\n'+ind+extra+'\n'+ind,a,b,a+1+ind.length+extra.length); }
+      else ins('\n'+ind+extra); return; }
+    if(e.key==='}'){ const ls=v.lastIndexOf('\n',a-1)+1, before=v.slice(ls,a);
+      if(/^\s+$/.test(before)&&before.length>=4){ e.preventDefault(); ins(before.slice(4)+'}',ls,b); } }
+  });
+  return ta;
+}
+
+/* ============ renderização comum ============ */
+function sheetHTML(q,num){
+  const b=best(q.id);
+  let h=`<div class="q-meta"><span class="tag">${num||'Q-'+q.id}</span><span class="tag">${esc(TOPICS[q.t].nome)}</span><span class="tag kind">${KIND[q.k]}</span>${b!=null?`<span class="tag ${b===10?'best':''}">melhor nota ${fmt(b)}</span>`:''}</div>
+  <h2>${esc(q.titulo)}</h2><p class="enun">${q.enun}</p>`;
+  if(q.k==='escrever') h+=specHTML(q);
+  if(q.k==='erro') h+=`<p class="muted" style="font-size:13.5px;margin:0">Uma linha só. Clique nela e confirme.</p>`;
+  if(q.k==='completar') h+=`<p class="muted" style="font-size:13.5px;margin:0">Espaços não importam: <code>(float *)</code> e <code>(float*)</code> valem igual.</p>`;
+  return h;
+}
+function starter(q){ return ''; }
+function oldStarter(q){ return (q.lib?'// inclua aqui a biblioteca necessária para malloc\n\n':'')+q.sig+'\n{\n    \n}'; }
+function draftFor(q){ const d=lsGet('p3c:draft:'+q.id,null); if(d==null||d.trim()===oldStarter(q).trim()) return ''; return d; }
+function specHTML(q){
+  const m=q.sig.match(/^(.*?)(\w+)\s*\((.*)\)\s*$/); const ret=m[1].trim(), nome=m[2];
+  const ps=m[3].split(',').map(p=>p.trim()).filter(Boolean).map(p=>{
+    const mm=p.match(/^(.*?)(\w+)\s*((?:\[[^\]]*\])*)$/); const tipo=mm[1].trim().replace(/\s*\*$/,' *'), dims=(mm[3].match(/\[([^\]]*)\]/g)||[]).map(d=>d.slice(1,-1));
+    const desc=dims.length===2?`matriz ${tipo} ${dims.join('x')}`:dims.length===1?`vetor de ${tipo}`:tipo;
+    return `<li><code>${esc(mm[2])}</code><span>${esc(desc)}</span></li>`; });
+  return `<div class="eyebrow sig-label">O que o enunciado define</div><div class="spec">
+    <div><span class="k">Nome</span><code>${esc(nome)}</code></div>
+    <div><span class="k">Recebe</span><ul>${ps.join('')}</ul></div>
+    <div><span class="k">Retorno</span>${ret==='void'?'<span class="muted">deduza pelo verbo do enunciado</span>':`<code>${esc(ret.replace(/\s*\*$/,' *'))}</code>`}</div>
+    ${q.lib?'<div><span class="k">Atenção</span><span class="muted">inclua a biblioteca necessária</span></div>':''}
+  </div><p class="muted" style="font-size:13.5px;margin:10px 0 0">Escreva a função completa, como na prova: assinatura, chaves e corpo.</p>`;
+}
+function benchHTML(q){
+  const pre=q.ctx.split('\n'), post=(q.main||'').split('\n');
+  const ro=(lines,start)=>`<div class="ro-row"><div class="gut">${lines.map((_,i)=>start+i).join('\n')}</div><pre class="code">${hl(lines.join('\n'))}</pre></div>`;
+  return `<div class="bench"><div class="bench-head"><span class="fname">prova_p3.c</span><span class="sp">Ctrl/⌘ + Enter corrige</span></div>
+    <div class="bench-ro"><div class="ro-lab">já pronto no arquivo</div>${ro(pre,1)}</div>
+    <div class="ed-host"></div>
+    ${q.main?`<div class="bench-post"><div class="ro-lab" style="padding-top:6px">main() de teste · não precisa escrever</div>${ro(post,1)}</div>`:''}</div>`;
+}
+function gradeHTML(nota,src){
+  const ten=nota===10;
+  return `<div class="grade"><div class="grade-mark ${ten?'ten':nota==null?'pend':''}"><svg viewBox="0 0 128 104" aria-hidden="true"><ellipse cx="64" cy="52" rx="56" ry="40" transform="rotate(-8 64 52)"/></svg><b>${nota==null?'?':fmt(nota)}</b></div><small>${src}</small></div>`;
+}
+function critHTML(res){ return `<ul class="crit">${res.map(r=>`<li class="${r.ok?'ok':'no'}"><span class="m">${r.ok?'✓':'✗'}</span><span>${esc(r.msg)}${!r.ok&&r.crit?'<span class="zr">zera</span>':''}</span></li>`).join('')}</ul>`; }
+function gabHTML(code,title='Gabarito'){
+  return `<div><div class="sect-t">${title}<button class="link-btn" data-copy>Copiar</button></div><pre class="code" data-src="${esc(code)}">${hl(code)}</pre></div>`;
+}
+function wireCopy(root){ root.querySelectorAll('[data-copy]').forEach(b=>b.onclick=()=>{ const pre=b.closest('div').parentElement.querySelector('pre[data-src]'); const t=pre.getAttribute('data-src');
+  navigator.clipboard?.writeText(t).then(()=>toast('Gabarito copiado')).catch(()=>{ const r=document.createRange(); r.selectNodeContents(pre); const s=getSelection(); s.removeAllRanges(); s.addRange(r); toast('Selecionado. Use Ctrl/⌘ + C'); }); }); }
+
+const SELF=[
+  {k:'ok',rot:'Bate com o gabarito',det:'Mesma lógica, índices e retorno. Escrita diferente também vale.'},
+  {k:'sintaxe',rot:'Erro de sintaxe',det:'Faltou ; ou chave, tipo ou nome errado. Desconta 2 pontos.'},
+  {k:'detalhe',rot:'Erro de índice ou detalhe',det:'Limite errado, caso base, acumulador mal iniciado. Nota máxima 5.'},
+  {k:'logica',rot:'Lógica errada',det:'Não resolve o que o enunciado pede. Nota 0.'}];
+function notaFinal(auto,self){
+  if(auto.critFail) return 0;
+  if(self==='ok') return auto.nota;
+  if(self==='sintaxe') return Math.max(0,Math.round((auto.nota-2)*10)/10);
+  if(self==='detalhe') return Math.min(auto.nota,5);
+  if(self==='logica') return 0;
+  return null;
+}
+function corrEscreverHTML(q,auto,self,code){
+  const nota=notaFinal(auto,self);
+  let body='';
+  if(auto.critFail) body+=`<div class="zero">Zerou: ${esc(auto.res.find(r=>!r.ok&&r.crit).msg)}</div>`;
+  else if(nota==null) body+=`<p class="resumo">A checagem automática terminou. Agora compare sua resposta com o gabarito, linha a linha, e escolha abaixo o que aconteceu. Seja rígido como o professor: na dúvida, escolha a opção mais severa.</p>`;
+  body+=`<div><div class="sect-t">Critérios do professor (checagem automática)</div>${critHTML(auto.res)}</div>`;
+  body+=`<div class="cmp"><div><div class="sect-t">Sua resposta</div><pre class="code">${hl(code&&code.trim()?code:'// em branco')}</pre></div>${gabHTML(q.gab,'Gabarito 100%')}</div>`;
+  if(!auto.critFail) body+=`<div><div class="sect-t">Sua autoavaliação</div><div class="self" role="group" aria-label="Autoavaliação">${SELF.map(o=>`<button class="self-opt" data-self="${o.k}" aria-pressed="${self===o.k}"><b>${o.rot}</b><span>${o.det}</span></button>`).join('')}</div></div>`;
+  const srcTxt=auto.critFail?'zerou na checagem automática':nota==null?'falta sua autoavaliação':'checagem automática + autoavaliação';
+  return {nota,html:gradeHTML(nota,srcTxt)+`<div class="corr-body">${body}<div class="actions" data-slot="acts"></div></div>`};
+}
+
+/* ============ TREINO ============ */
+const T={cur:null,filter:lsGet('p3c:filtro','todos'),lastTopic:null,ctl:null,state:null};
+function pickNext(){
+  const pool=Q.filter(q=>(T.filter==='todos'||q.t===T.filter)&&q.id!==T.cur?.id);
+  const w=pool.map(q=>{ const b=best(q.id); let x=b==null?3:b<10?4:0.4;
+    if(T.filter==='todos'){ if(q.t===T.lastTopic) x*=0.25; x*=1.4-topicStats(q.t).pct; }
+    return x; });
+  let r=Math.random()*w.reduce((a,b)=>a+b,0);
+  for(let i=0;i<pool.length;i++){ r-=w[i]; if(r<=0) return pool[i]; }
+  return pool[0]||Q[0];
+}
+function renderChips(){
+  const all=[['todos','Todos'],...Object.entries(TOPICS).map(([k,v])=>[k,v.nome])];
+  $('#chips').innerHTML=all.map(([k,n])=>`<button class="chip" data-t="${k}" aria-pressed="${T.filter===k}">${esc(n)}</button>`).join('');
+  $('#chips').querySelectorAll('button').forEach(b=>b.onclick=()=>{ T.filter=b.dataset.t; lsSet('p3c:filtro',T.filter); renderChips(); if(T.cur&&T.filter!=='todos'&&T.cur.t!==T.filter) openQ(pickNext()); });
+}
+function openQ(q){
+  if(T.ctl) T.ctl.abort();
+  if(T.cur) T.lastTopic=T.cur.t;
+  T.cur=q; T.state=null; lsSet('p3c:atual',q.id);
+  $('#qSheet').innerHTML=sheetHTML(q);
+  const work=$('#qWork'); const corr=$('#qCorr'); corr.hidden=true; corr.innerHTML='';
+  if(q.k==='escrever'){
+    work.innerHTML=benchHTML(q)+`<div class="actions"><button class="btn primary" id="btnCorr">Corrigir</button><button class="btn" id="btnLimpar">Recomeçar</button><span class="hint">Tab indenta · Shift+Tab recua</span></div>`;
+    const ta=mountEditor(work.querySelector('.ed-host'),{value:draftFor(q),onChange:v=>lsSet('p3c:draft:'+q.id,v),onSubmit:()=>corrigirEscrever(),label:'Sua função'});
+    $('#btnCorr').onclick=corrigirEscrever;
+    $('#btnLimpar').onclick=()=>{ ta.value=starter(q); ta.dispatchEvent(new Event('input')); ta.focus(); };
+  } else if(q.k==='completar'){
+    let i=0; const answers=[];
+    const parts=q.code.split(/⟦(.+?)⟧/);
+    let h='';
+    parts.forEach((p,k)=>{ if(k%2===0) h+=hl(p); else { const vars=p.split('||'); answers.push(vars); const w=Math.max(...vars.map(v=>v.length))+1; h+=`<input id="fill-${q.id}-${i}" data-i="${i}" style="width:${w+1}ch" aria-label="Lacuna ${i+1}" autocomplete="off" autocapitalize="off" spellcheck="false">`; i++; } });
+    work.innerHTML=`<div class="fill">${h}</div><div class="actions"><button class="btn primary" id="btnCorr">Corrigir lacunas</button><span class="hint">Enter vai para a próxima lacuna</span></div>`;
+    const ins=[...work.querySelectorAll('.fill input')];
+    ins.forEach((inp,k)=>inp.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); if(e.metaKey||e.ctrlKey||k===ins.length-1) corrigirCompletar(answers); else ins[k+1].focus(); } }));
+    $('#btnCorr').onclick=()=>corrigirCompletar(answers);
+  } else {
+    const lines=q.code.split('\n');
+    work.innerHTML=`<div class="lines" role="group" aria-label="Linhas do código">${lines.map((l,k)=>`<button data-n="${k+1}" aria-pressed="false"><span class="n">${k+1}</span><span>${hl(l)||' '}</span></button>`).join('')}</div><div class="actions"><button class="btn primary" id="btnCorr" disabled>Confirmar linha</button><span class="hint" id="selHint">Nenhuma linha escolhida</span></div>`;
+    let sel=null;
+    work.querySelectorAll('.lines button').forEach(b=>b.onclick=()=>{ if(T.state) return; sel=+b.dataset.n; work.querySelectorAll('.lines button').forEach(x=>x.setAttribute('aria-pressed',x===b)); $('#btnCorr').disabled=false; $('#selHint').textContent='Linha '+sel+' escolhida'; });
+    $('#btnCorr').onclick=()=>corrigirErro(sel);
+  }
+}
+function actsTreino(corr){
+  const slot=corr.querySelector('[data-slot="acts"]');
+  slot.innerHTML=`<button class="btn" id="btnAgain">Tentar de novo</button><button class="btn ink" id="btnNext">Próxima questão →</button>`;
+  slot.querySelector('#btnAgain').onclick=()=>{ const q=T.cur; T.cur=null; openQ(q); window.scrollTo({top:0,behavior:'smooth'}); };
+  slot.querySelector('#btnNext').onclick=()=>{ openQ(pickNext()); window.scrollTo({top:0,behavior:'smooth'}); };
+  wireCopy(corr);
+}
+function corrigirEscrever(){
+  const q=T.cur; const code=$('#qWork textarea').value;
+  T.auto=autoCheck(q,code); T.code=code; T.self=null; T.recorded=false; T.prevBest=best(q.id); T.info=null;
+  if(T.auto.critFail) commitSelf(); else renderCorrEscrever();
+  $('#qCorr').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function renderCorrEscrever(){
+  const q=T.cur, corr=$('#qCorr'); corr.hidden=false;
+  corr.innerHTML=corrEscreverHTML(q,T.auto,T.self,T.code).html; actsTreino(corr);
+  corr.querySelectorAll('[data-self]').forEach(b=>b.onclick=()=>{ T.self=b.dataset.self; commitSelf(); });
+  if(T.info) showGain(corr,T.info);
+}
+function commitSelf(){
+  const q=T.cur, nota=notaFinal(T.auto,T.self);
+  if(!T.recorded){ T.info=store.record(q.id,nota); T.recorded=true; }
+  else { const r=store.data.q[q.id]; r.last=nota; r.best=Math.max(T.prevBest??0,nota); store.data.evo[today()]=Math.round(readiness()*1000)/10; store.checkMarcos(); store.save();
+    Object.assign(T.info,{nota,after:readiness(),novaDom:nota===10&&T.prevBest!==10,melhorou:T.prevBest!=null&&nota>T.prevBest,tAfter:topicStats(q.t).pct}); }
+  renderCorrEscrever(); $('#qSheet').innerHTML=sheetHTML(q);
+}
+function corrigirCompletar(answers){
+  const q=T.cur; if(T.state==='done') return;
+  const norm=s=>s.replace(/\s+/g,'');
+  const ins=[...document.querySelectorAll('#qWork .fill input')];
+  let ok=0;
+  ins.forEach((inp,i)=>{ const right=answers[i].some(a=>norm(a)===norm(inp.value)); if(right) ok++; inp.classList.add(right?'right':'wrong'); inp.readOnly=true;
+    if(!right){ const s=document.createElement('span'); s.className='ans'; s.textContent=' '+answers[i][0]; inp.after(s); } });
+  const nota=Math.round(ok/ins.length*100)/10;
+  const full=q.code.replace(/⟦(.+?)⟧/g,(_,p)=>p.split('||')[0]);
+  const corr=$('#qCorr'); corr.hidden=false;
+  corr.innerHTML=gradeHTML(nota,`${ok} de ${ins.length} lacunas certas`)+`<div class="corr-body">${nota<10?`<p class="resumo">Lacunas erradas estão riscadas, com a resposta certa ao lado em verde.</p>`:'<p class="resumo">Todas as lacunas corretas.</p>'}<p class="exp">${esc(q.exp)}</p>${gabHTML(full,'Código completo')}<div class="actions" data-slot="acts"></div></div>`;
+  actsTreino(corr); showGain(corr,store.record(q.id,nota)); $('#qSheet').innerHTML=sheetHTML(q); T.state='done';
+  $('#btnCorr').disabled=true;
+  corr.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function corrigirErro(sel){
+  const q=T.cur; if(T.state==='done'||!sel) return;
+  const right=sel===q.bug, nota=right?10:0;
+  document.querySelectorAll('#qWork .lines button').forEach(b=>{ const n=+b.dataset.n; b.disabled=true; if(n===q.bug) b.classList.add('is-bug'); else if(n===sel) b.classList.add('is-miss'); });
+  const corr=$('#qCorr'); corr.hidden=false;
+  corr.innerHTML=gradeHTML(nota,right?'linha certa':'você marcou a linha '+sel)+`<div class="corr-body">${right?'':`<div class="zero">O erro está na linha ${q.bug}.</div>`}<p class="exp">${esc(q.exp)}</p><div><div class="sect-t">Linha ${q.bug} corrigida</div><pre class="code">${hl(q.fix)}</pre></div><div class="actions" data-slot="acts"></div></div>`;
+  actsTreino(corr); showGain(corr,store.record(q.id,nota)); $('#qSheet').innerHTML=sheetHTML(q); T.state='done';
+  $('#btnCorr').disabled=true;
+  corr.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function showGain(corr,info){
+  const body=corr.querySelector('.corr-body'); if(!body) return;
+  const parts=[]; const b=Math.round(info.before*100), a=Math.round(info.after*100);
+  if(info.novaDom) parts.push(`<b>Questão dominada.</b> Agora são ${domCount()} de ${Q.length} com 10.`);
+  else if(info.melhorou) parts.push(`<b>Você melhorou:</b> ${fmt(info.prevBest)} → ${fmt(info.nota)} nesta questão.`);
+  else if(info.prevBest===10) parts.push('Já estava dominada. Refazer mantém o conteúdo fresco para a prova.');
+  else if(info.first) parts.push('Primeira tentativa registrada. Ela fica na fila de revisão até você fechar com 10.');
+  else parts.push('Ainda não foi desta vez. Leia os erros, compare com o gabarito e refaça daqui a pouco.');
+  if(a>b) parts.push(`Prontidão: ${b}% → <b>${a}%</b>.`);
+  const ta=Math.round(info.tAfter*100), tb=Math.round(info.tBefore*100);
+  if(ta>tb) parts.push(`${esc(TOPICS[info.t].nome)}: ${tb}% → ${ta}%.`);
+  const hj=store.data.log[today()]?.n||0, md=store.data.meta.diaria;
+  parts.push(hj>=md?`Meta de hoje cumprida (${hj}/${md}).`:`Hoje: ${hj} de ${md}.`);
+  const div=document.createElement('div'); div.className='gain'+(info.novaDom||info.melhorou?' up':''); div.innerHTML=parts.join(' '); body.prepend(div);
+}
+
+/* ============ PAINEL ============ */
+function streak(){ const set=new Set(store.data.dias); let n=0; const d=new Date(); if(!set.has(today())) d.setDate(d.getDate()-1);
+  for(;;){ const k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); if(set.has(k)){n++;d.setDate(d.getDate()-1);} else break; } return n; }
+function diasAte(iso){ if(!iso) return null; const [y,m,d]=iso.split('-').map(Number); const t=new Date(); t.setHours(0,0,0,0); return Math.round((new Date(y,m-1,d)-t)/864e5); }
+function renderMotiv(){
+  const hj=store.data.log[today()]?.n||0, md=store.data.meta.diaria;
+  $('#hjNum').innerHTML=`${hj}<small> / ${md}</small>`; $('#hjBar').style.width=Math.min(100,hj/md*100)+'%'; $('#hjBarW').classList.toggle('ok',hj>=md);
+  $('#metaDiaria').value=String(md);
+  const pend=Q.length-domCount(), dias=diasAte(store.data.meta.prova);
+  $('#provaData').value=store.data.meta.prova||'';
+  if(dias==null){ $('#provaFalta').textContent='–'; $('#provaRitmo').textContent='Defina a data para ver o ritmo necessário.'; }
+  else if(dias<0){ $('#provaFalta').textContent='Já passou'; $('#provaRitmo').textContent='Atualize a data se houver outra avaliação.'; }
+  else { $('#provaFalta').textContent=dias===0?'É hoje':dias===1?'Amanhã':`${dias} dias`;
+    $('#provaRitmo').textContent=pend?`${pend} questões sem 10 · ${Math.ceil(pend/Math.max(1,dias))} por dia fecham o banco a tempo.`:'Banco inteiro com 10. Faça simulados até o dia.'; }
+  // evolução
+  const evo=Object.entries(store.data.evo).sort((a,b)=>a[0]<b[0]?-1:1).slice(-30), svg=$('#evoSvg');
+  const W=300,H=96,P=8,top=10,bot=H-18;
+  let g=`<line class="evo-grid" x1="${P}" x2="${W-P}" y1="${top}" y2="${top}"/><line class="evo-grid" x1="${P}" x2="${W-P}" y1="${bot}" y2="${bot}"/><text class="evo-lab" x="${W-P}" y="${top-2}" text-anchor="end">100%</text>`;
+  if(evo.length>=2){
+    const x=i=>P+i*(W-2*P)/(evo.length-1), y=v=>bot-(v/100)*(bot-top);
+    const pts=evo.map(([,v],i)=>`${x(i).toFixed(1)},${y(v).toFixed(1)}`);
+    g+=`<polygon class="evo-area" points="${x(0)},${bot} ${pts.join(' ')} ${x(evo.length-1)},${bot}"/><polyline class="evo-line" points="${pts.join(' ')}"/>`;
+    const lv=evo.at(-1)[1]; g+=`<circle class="evo-dot" cx="${x(evo.length-1)}" cy="${y(lv)}" r="3.5"/>`;
+    const fd=d=>d.slice(8,10)+'/'+d.slice(5,7);
+    g+=`<text class="evo-lab" x="${P}" y="${H-4}">${fd(evo[0][0])}</text><text class="evo-lab" x="${W-P}" y="${H-4}" text-anchor="end">${fd(evo.at(-1)[0])}</text>`;
+    const d=Math.round(lv-evo[0][1]);
+    $('#evoTxt').textContent=d>0?`+${d} pontos de prontidão em ${evo.length} dias de treino.`:`${evo.length} dias de treino registrados.`;
+  } else { $('#evoTxt').textContent='A curva aparece a partir do segundo dia de treino.'; }
+  svg.innerHTML=g;
+  // marcos
+  const on=MARCOS.filter(m=>store.data.marcos[m.k]).length;
+  $('#marcosSub').textContent=`${on} de ${MARCOS.length} conquistados.`;
+  $('#marcosGrid').innerHTML=MARCOS.map(m=>{ const t=store.data.marcos[m.k]; return `<div class="marco ${t?'on':''}"><b>${esc(m.nome)}</b>${t?'conquistado em '+new Date(t).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}):esc(m.desc)}</div>`; }).join('');
+  // coach
+  const done=Q.filter(q=>best(q.id)!=null).length;
+  const ts=Object.keys(TOPICS).map(t=>({t,...topicStats(t)})).sort((a,b)=>a.pct-b.pct), fraco=ts[0];
+  const rev=Q.filter(q=>{const b=best(q.id);return b!=null&&b<10;}).sort((a,b)=>best(a.id)-best(b.id));
+  const seq=streak(), atual=Math.round(readiness()*100), ini=evo.length?Math.round(evo[0][1]):atual;
+  let txt, btn, act;
+  if(!done){ txt='Primeiro passo: faça 3 questões hoje. Cada questão que você fecha com 10 aumenta sua prontidão para a P3, e o painel mostra essa evolução dia a dia.'; btn='Começar'; act=()=>{location.hash='treino';}; }
+  else {
+    const a=atual>ini?`Você saiu de ${ini}% para ${atual}% de prontidão.`:`Prontidão atual: ${atual}%.`;
+    const b=hj===0?(seq?`Hoje ainda não teve treino. Não quebre a sequência de ${seq} ${seq===1?'dia':'dias'}.`:'Hoje ainda não teve treino.'):hj<md?`Faltam ${md-hj} para a meta de hoje.`:'Meta de hoje cumprida.';
+    if(rev.length>=3){ txt=`${a} ${b} Prioridade agora: ${rev.length} questões na fila de revisão. Fechar essas com 10 vale mais que abrir novas.`; btn='Revisar a pior nota'; act=()=>{ openQ(rev[0]); location.hash='treino'; }; }
+    else { txt=`${a} ${b} Seu ponto mais fraco é ${TOPICS[fraco.t].nome} (${Math.round(fraco.pct*100)}%).`; btn='Treinar '+TOPICS[fraco.t].nome; act=()=>{ T.filter=fraco.t; lsSet('p3c:filtro',T.filter); renderChips(); openQ(pickNext()); location.hash='treino'; }; }
+  }
+  $('#coachTxt').textContent=txt; $('#coachBtn').textContent=btn; $('#coachBtn').onclick=act;
+}
+$('#metaDiaria').onchange=e=>{ store.data.meta.diaria=+e.target.value; store.checkMarcos(); store.save(); renderPainel(); };
+$('#provaData').onchange=e=>{ store.data.meta.prova=e.target.value; store.save(); renderPainel(); };
+function renderPainel(){
+  renderMotiv();
+  const done=Q.filter(q=>best(q.id)!=null);
+  const pct=Q.reduce((s,q)=>s+(best(q.id)??0),0)/(Q.length*10);
+  const dom=Q.filter(q=>best(q.id)===10).length;
+  $('#readyNum').innerHTML=Math.round(pct*100)+'<small>%</small>';
+  $('#readyBar').style.width=(pct*100)+'%';
+  $('#readyTxt').textContent=`${Q.length-dom} questões ainda sem 10`;
+  $('#stMedia').textContent=done.length?fmt(done.reduce((s,q)=>s+best(q.id),0)/done.length):'–';
+  $('#stDom').textContent=`${dom}/${Q.length}`;
+  $('#stSeq').textContent=streak();
+  const ls=store.data.sims.at(-1); $('#stSim').textContent=ls?fmt(ls.media):'–';
+  $('#topicRows').innerHTML=Object.entries(TOPICS).map(([k,v])=>{ const s=topicStats(k);
+    return `<div class="topic-row"><div class="nm">${esc(v.nome)}<small>${esc(v.det)} · ${s.dom}/${s.tot} com 10</small></div><div class="bar ${s.pct>=1?'ok':''}"><i style="width:${s.pct*100}%"></i></div><button class="link-btn" data-t="${k}">Treinar ${Math.round(s.pct*100)}% →</button></div>`; }).join('');
+  $('#topicRows').querySelectorAll('button').forEach(b=>b.onclick=()=>{ T.filter=b.dataset.t; lsSet('p3c:filtro',T.filter); renderChips(); T.cur=null; openQ(pickNext()); location.hash='treino'; });
+  const rev=Q.filter(q=>{const b=best(q.id);return b!=null&&b<10;}).sort((a,b)=>best(a.id)-best(b.id));
+  $('#revList').innerHTML=rev.length?rev.slice(0,8).map(q=>`<li><button data-id="${q.id}"><span class="code">${q.id}</span><span class="tt">${esc(q.titulo)}</span><span class="note-chip">${fmt(best(q.id))}</span></button></li>`).join(''):`<li class="empty">${done.length?'Nada pendente. Tudo o que você fez está com 10.':'Vazia por enquanto. Faça algumas questões no Treino.'}</li>`;
+  $('#revList').querySelectorAll('button').forEach(b=>b.onclick=()=>{ openQ(QMAP[b.dataset.id]); location.hash='treino'; });
+}
+
+/* ============ BANCO ============ */
+function renderBanco(){
+  $('#bankRoot').innerHTML=Object.entries(TOPICS).map(([k,v])=>{ const qs=Q.filter(q=>q.t===k); const s=topicStats(k);
+    return `<div class="box"><h3>${esc(v.nome)}<small>${s.dom}/${s.tot} com 10</small></h3><ul class="bank-list">${qs.map(q=>{const b=best(q.id);
+      return `<li><button data-id="${q.id}"><span class="code">${q.id}</span><span class="tt">${esc(q.titulo)}</span><span class="tag ${q.k==='escrever'?'kind':''}">${q.k==='escrever'?'escrever':q.k==='completar'?'completar':'erro'}</span>${b!=null?`<span class="note-chip ${b===10?'ten':''}">${fmt(b)}</span>`:'<span class="none">—</span>'}</button></li>`;}).join('')}</ul></div>`; }).join('');
+  $('#bankRoot').querySelectorAll('button').forEach(b=>b.onclick=()=>{ openQ(QMAP[b.dataset.id]); location.hash='treino'; });
+}
+$('#btnReset').onclick=()=>{ $('#resetConfirm').hidden=false; };
+$('#resetNo').onclick=()=>{ $('#resetConfirm').hidden=true; };
+$('#resetYes').onclick=()=>{ store.data=BLANK(); store.save(); Q.forEach(q=>{try{localStorage.removeItem('p3c:draft:'+q.id);}catch(e){}}); $('#resetConfirm').hidden=true; renderAll(); toast('Progresso apagado'); };
+
+/* ============ SIMULADO ============ */
+const SIM_DUR=60*60;
+let S=lsGet('p3c:sim',null), simTick=null, simCtl=null, simGrading=false;
+function simSave(){ lsSet('p3c:sim',S); }
+function simNew(){
+  const qs=Object.keys(TOPICS).map(t=>{ const pool=Q.filter(q=>q.t===t&&q.k==='escrever'); return pool[Math.floor(Math.random()*pool.length)].id; });
+  S={qs,codes:{},cur:0,inicio:Date.now(),fase:'prova',res:{}}; simSave(); renderSim();
+}
+function simLeft(){ return Math.max(0,SIM_DUR-Math.floor((Date.now()-S.inicio)/1000)); }
+function renderSim(){
+  clearInterval(simTick);
+  const root=$('#simRoot');
+  if(!S||S.fase==='inicio'){
+    const hist=store.data.sims.slice(-5).reverse();
+    root.innerHTML=`<div class="sim-start"><div class="box"><div class="eyebrow">Simulado</div><h1 style="font-size:30px;margin:6px 0 12px">Prova P3 em 60 minutos</h1>
+      <ol class="rules" style="margin-bottom:18px"><li>6 questões de escrever função, uma de cada conteúdo.</li><li>Sem gabarito e sem correção até entregar, como na prova.</li><li>O cronômetro continua se você sair da página. Em 0:00 a prova é entregue sozinha.</li><li>Na entrega, a checagem automática corrige os critérios e você avalia cada resposta contra o gabarito. Depois sai o boletim.</li></ol>
+      <button class="btn primary" id="simGo">Começar simulado</button></div>
+      <div class="box"><h2>Simulados anteriores</h2><p class="sub">Média final de cada simulado.</p>${hist.length?`<ul class="rev-list">${hist.map(s=>`<li><button disabled style="cursor:default"><span class="tt">${new Date(s.ts).toLocaleDateString('pt-BR',{day:'2-digit',month:'short'})} · ${new Date(s.ts).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}</span><span class="note-chip ${s.media===10?'ten':''}">${fmt(s.media)}</span></button></li>`).join('')}</ul>`:'<p class="empty">Nenhum simulado feito ainda.</p>'}</div></div>`;
+    $('#simGo').onclick=simNew; return;
+  }
+  if(S.fase==='prova'){
+    if(simLeft()<=0){ simEntregar(); return; }
+    const q=QMAP[S.qs[S.cur]];
+    root.innerHTML=`<div class="sim-bar"><div class="sim-tabs">${S.qs.map((id,i)=>`<button data-i="${i}" aria-current="${i===S.cur}" class="${(S.codes[id]||'').trim()&&S.codes[id]!==starter(QMAP[id])?'done':''}" aria-label="Questão ${i+1}">${i+1}</button>`).join('')}</div><span class="timer" id="simTimer"></span><button class="btn ink" id="simEnd">Entregar prova</button></div>
+      <div id="simConfirm" hidden class="box" style="margin-bottom:16px"><p style="margin:0 0 12px">Entregar agora? Depois de entregar não dá para alterar as respostas.</p><div class="actions" style="margin:0"><button class="btn" id="simNo">Voltar à prova</button><button class="btn primary" id="simYes">Entregar</button></div></div>
+      <div class="q-grid"><article class="sheet">${sheetHTML(q,'Questão '+(S.cur+1)+' de 6').replace(/<span class="tag (best)?\s*">melhor nota[^<]*<\/span>/,'')}</article><div>${benchHTML(q)}<div class="actions"><button class="btn" id="simPrev" ${S.cur===0?'disabled':''}>← Anterior</button><button class="btn primary" id="simNext" ${S.cur===5?'disabled':''}>Próxima →</button></div></div></div>`;
+    mountEditor(root.querySelector('.ed-host'),{value:S.codes[q.id]??starter(q),onChange:v=>{S.codes[q.id]=v;simSave(); root.querySelector(`.sim-tabs [data-i="${S.cur}"]`).classList.toggle('done',v.trim()!==starter(q).trim());},label:'Sua resposta da questão '+(S.cur+1)});
+    root.querySelectorAll('.sim-tabs button').forEach(b=>b.onclick=()=>{S.cur=+b.dataset.i;simSave();renderSim();});
+    $('#simPrev').onclick=()=>{S.cur--;simSave();renderSim();};
+    $('#simNext').onclick=()=>{S.cur++;simSave();renderSim();};
+    $('#simEnd').onclick=()=>{$('#simConfirm').hidden=false;};
+    $('#simNo').onclick=()=>{$('#simConfirm').hidden=true;};
+    $('#simYes').onclick=simEntregar;
+    const tick=()=>{ const l=simLeft(), el=$('#simTimer'); if(!el) return; el.textContent=String(Math.floor(l/60)).padStart(2,'0')+':'+String(l%60).padStart(2,'0'); el.classList.toggle('low',l<300); if(l<=0) simEntregar(); };
+    tick(); simTick=setInterval(tick,1000); return;
+  }
+  if(S.fase==='corrigindo'){ root.innerHTML=`<div class="box"><div class="loading"><span class="dot"></span><span id="simProg">Corrigindo…</span></div></div>`; return; }
+  if(S.fase==='boletim'){
+    const notaDe=id=>notaFinal(S.res[id].auto,S.res[id].self);
+    const pend=S.qs.filter(id=>notaDe(id)==null).length;
+    const notas=S.qs.map(id=>notaDe(id)??0), media=notas.reduce((a,b)=>a+b,0)/notas.length;
+    const tempo=Math.min(SIM_DUR,Math.floor(((S.fim||Date.now())-S.inicio)/1000));
+    const titulo=pend?`Corrija sua prova: ${pend} ${pend===1?'questão aguarda':'questões aguardam'} sua autoavaliação.`:media>=10?'Gabaritou a prova.':media>=6?'Passaria, mas a meta é 10.':'Abaixo da média. Revise os conteúdos marcados.';
+    root.innerHTML=`<div class="boletim"><div class="bol-head">${gradeHTML(pend?null:Math.round(media*10)/10,pend?'média sai após a autoavaliação':'média do simulado')}<div style="flex:1;min-width:200px"><div class="eyebrow">Boletim</div><h2>${titulo}</h2><p class="muted" style="margin:6px 0 0">Tempo usado: ${Math.floor(tempo/60)} min · ${notas.filter(n=>n===10).length} de 6 questões com 10</p></div><div class="actions" style="margin:0"><button class="btn primary" id="simAgain">Novo simulado</button></div></div>
+      ${S.qs.map((id,i)=>{ const q=QMAP[id], r=S.res[id], n=notaDe(id); const out=corrEscreverHTML(q,r.auto,r.self,S.codes[id]??'');
+        return `<details class="bol-row" data-id="${id}" ${n==null||(S.aberto&&S.aberto===id)?'open':''}><summary><span class="tag">Q${i+1}</span><span class="tt">${esc(q.titulo)}<small>${esc(TOPICS[q.t].nome)}</small></span><span class="note-chip ${n===10?'ten':''}">${n==null?'?':fmt(n)}</span></summary><div class="correcao">${out.html}</div></details>`; }).join('')}</div>`;
+    root.querySelectorAll('[data-slot="acts"]').forEach(s=>s.remove());
+    wireCopy(root);
+    root.querySelectorAll('.bol-row').forEach(row=>row.querySelectorAll('[data-self]').forEach(b=>b.onclick=()=>{
+      const id=row.dataset.id; S.res[id].self=b.dataset.self; S.aberto=id; simSave(); simFechar(); renderSim();
+      const el=root.querySelector(`.bol-row[data-id="${id}"]`); if(el) el.scrollIntoView({block:'nearest'}); }));
+    $('#simAgain').onclick=()=>{ S={fase:'inicio'}; simSave(); renderSim(); };
+  }
+}
+function simFechar(){
+  if(!S||S.gravado) return;
+  const notas=S.qs.map(id=>notaFinal(S.res[id].auto,S.res[id].self));
+  if(notas.some(n=>n==null)) return;
+  S.qs.forEach((id,i)=>store.record(id,notas[i]));
+  store.data.sims.push({ts:Date.now(),media:Math.round(notas.reduce((a,b)=>a+b,0)/notas.length*10)/10,notas});
+  store.checkMarcos(); store.save(); S.gravado=true; simSave(); renderPainel();
+}
+function simEntregar(){
+  if(!S||S.fase!=='prova') return;
+  clearInterval(simTick); S.fim=Date.now(); S.res={};
+  for(const id of S.qs){ const q=QMAP[id], code=S.codes[id]??''; S.res[id]={auto:autoCheck(q,code),self:null}; }
+  S.fase='boletim'; simSave(); simFechar(); renderSim();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ============ navegação ============ */
+const VIEWS=['painel','treino','simulado','banco'];
+function route(){
+  let v=location.hash.slice(1); if(!VIEWS.includes(v)) v='painel';
+  VIEWS.forEach(x=>{ $('#v-'+x).hidden=x!==v; });
+  document.querySelectorAll('nav a').forEach(a=>a.setAttribute('aria-current',a.dataset.v===v?'page':'false'));
+  if(v==='painel') renderPainel();
+  if(v==='banco') renderBanco();
+  if(v==='simulado'){ if(!S) S={fase:'inicio'}; if(S.fase==='corrigindo'){ S.fase='prova'; } renderSim(); }
+  if(v==='treino'&&!T.cur){ const last=QMAP[lsGet('p3c:atual','')]; openQ(last||pickNext()); }
+}
+function renderAll(){ route(); }
+$('#goTreino').onclick=()=>{ location.hash='treino'; };
+$('#goSim').onclick=()=>{ location.hash='simulado'; };
+$('#btnProx').onclick=()=>openQ(pickNext());
+window.addEventListener('hashchange',route);
+
+store.load(); store.checkMarcos(true); renderChips(); route();
+if('serviceWorker' in navigator) addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+</script>
+</body>
+</html>
