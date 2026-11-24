@@ -66,7 +66,8 @@ button{cursor:pointer}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
 .top .wrap{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding-block:10px}
-.brand{display:flex;align-items:baseline;gap:10px;margin-right:auto}
+.brand{display:flex;align-items:baseline;gap:10px;margin-right:auto;text-decoration:none;color:inherit;border-radius:6px}
+.brand:hover b{color:var(--accent)}
 .brand b{font-family:var(--f-display);font-weight:800;font-size:20px;letter-spacing:-.01em}
 .brand span{font-family:var(--f-mono);font-size:12px;color:var(--ink-3)}
 nav{display:flex;gap:4px;flex-wrap:wrap}
@@ -321,7 +322,7 @@ select,input[type="date"]{border:1px solid var(--line);background:var(--surface)
 <body>
 <header class="top">
   <div class="wrap">
-    <div class="brand"><b>Guia de Estudos em C</b><span>Fatec Mogi · ADS · LP I</span></div>
+    <a class="brand" href="#painel" aria-label="Guia de Estudos em C: voltar ao Painel"><b>Guia de Estudos em C</b><span>Fatec Mogi · ADS · LP I</span></a>
     <nav aria-label="Seções">
       <a href="#painel" data-v="painel">Painel</a>
       <a href="#treino" data-v="treino">Treino</a>
@@ -1919,7 +1920,8 @@ function renderAll(){ route(); }
 $('#goTreino').onclick=()=>{ location.hash='treino'; };
 $('#goSim').onclick=()=>{ location.hash='simulado'; };
 $('#btnProx').onclick=()=>openQ(pickNext());
-window.addEventListener('hashchange',route);
+window.addEventListener('hashchange',()=>{ route(); window.scrollTo(0,0); });
+document.querySelector('.brand').addEventListener('click',()=>window.scrollTo(0,0));
 
 store.load(); store.checkMarcos(true); renderChips(); route();
 if('serviceWorker' in navigator) addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
