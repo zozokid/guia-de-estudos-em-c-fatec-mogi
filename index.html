@@ -284,6 +284,10 @@ select,input[type="date"]{border:1px solid var(--line);background:var(--surface)
 .gain{background:var(--accent-soft);border-radius:8px;padding:10px 14px;font-size:14.5px}
 .gain.up{background:var(--ok-soft)}
 .gain b{font-weight:600}
+.grade-mark.prov svg ellipse{stroke-dasharray:7 5}
+.verdict{font-size:12px;font-weight:600;padding:3px 9px;border-radius:99px;white-space:nowrap}
+.verdict.ok{color:var(--ok);background:var(--ok-soft)}
+.verdict.no{color:var(--red);background:var(--red-soft)}
 .grade-mark.pend svg ellipse{stroke:var(--ink-3);stroke-dasharray:6 6}
 .grade-mark.pend b{color:var(--ink-3)}
 .cmp{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
@@ -1598,9 +1602,9 @@ function benchHTML(q){
     <div class="ed-host"></div>
     ${q.main?`<div class="bench-post"><div class="ro-lab" style="padding-top:6px">main() de teste · não precisa escrever</div>${ro(post,1)}</div>`:''}</div>`;
 }
-function gradeHTML(nota,src){
-  const ten=nota===10;
-  return `<div class="grade"><div class="grade-mark ${ten?'ten':nota==null?'pend':''}"><svg viewBox="0 0 128 104" aria-hidden="true"><ellipse cx="64" cy="52" rx="56" ry="40" transform="rotate(-8 64 52)"/></svg><b>${nota==null?'?':fmt(nota)}</b></div><small>${src}</small></div>`;
+function gradeHTML(nota,src,prov,verdict){
+  const cls=nota==null?'pend':nota===10?'ten':'';
+  return `<div class="grade"><div class="grade-mark ${cls} ${prov?'prov':''}"><svg viewBox="0 0 128 104" aria-hidden="true"><ellipse cx="64" cy="52" rx="56" ry="40" transform="rotate(-8 64 52)"/></svg><b>${nota==null?'?':fmt(nota)}</b></div>${verdict||''}<small>${src}</small></div>`;
 }
 function critHTML(res){ return `<ul class="crit">${res.map(r=>`<li class="${r.ok?'ok':'no'}"><span class="m">${r.ok?'✓':'✗'}</span><span>${esc(r.msg)}${!r.ok&&r.crit?'<span class="zr">zera</span>':''}</span></li>`).join('')}</ul>`; }
 function gabHTML(code,title='Gabarito'){
@@ -1630,8 +1634,11 @@ function corrEscreverHTML(q,auto,self,code){
   body+=`<div><div class="sect-t">Critérios do professor (checagem automática)</div>${critHTML(auto.res)}</div>`;
   body+=`<div class="cmp"><div><div class="sect-t">Sua resposta</div><pre class="code">${hl(code&&code.trim()?code:'// em branco')}</pre></div>${gabHTML(q.gab,'Gabarito 100%')}</div>`;
   if(!auto.critFail) body+=`<div><div class="sect-t">Sua autoavaliação</div><div class="self" role="group" aria-label="Autoavaliação">${SELF.map(o=>`<button class="self-opt" data-self="${o.k}" aria-pressed="${self===o.k}"><b>${o.rot}</b><span>${o.det}</span></button>`).join('')}</div></div>`;
-  const srcTxt=auto.critFail?'zerou na checagem automática':nota==null?'falta sua autoavaliação':'checagem automática + autoavaliação';
-  return {nota,html:gradeHTML(nota,srcTxt)+`<div class="corr-body">${body}<div class="actions" data-slot="acts"></div></div>`};
+  const falhas=auto.res.filter(r=>!r.ok).length;
+  const verdict=falhas?`<span class="verdict no">${falhas} ${falhas===1?'critério falhou':'critérios falharam'}</span>`:'<span class="verdict ok">Todos os critérios ok</span>';
+  const grade=nota==null?gradeHTML(auto.nota,'nota provisória · confirme na autoavaliação',true,verdict)
+    :gradeHTML(nota,auto.critFail?'zerou na checagem automática':'checagem automática + autoavaliação',false,verdict);
+  return {nota,html:grade+`<div class="corr-body">${body}<div class="actions" data-slot="acts"></div></div>`};
 }
 
 /* ============ TREINO ============ */
