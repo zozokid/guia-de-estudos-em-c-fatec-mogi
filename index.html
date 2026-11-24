@@ -216,8 +216,7 @@ pre.code{margin:0;background:var(--code-bg);color:var(--code-fg);font-family:var
 .sect-t .link-btn{margin-left:auto;text-transform:none;letter-spacing:0;font-family:var(--f-body)}
 .exp{font-size:14.5px;margin:0;color:var(--ink-2);max-width:70ch}
 .loading{display:flex;align-items:center;gap:12px;font-size:14.5px;color:var(--ink-2)}
-.dot{width:10px;height:10px;border-radius:50%;background:var(--accent);animation:pulse 1s ease-in-out infinite}
-@keyframes pulse{50%{opacity:.25;transform:scale(.7)}}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--accent)}
 
 /* ===== BANCO ===== */
 .bank{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
@@ -333,8 +332,7 @@ select,input[type="date"]{border:1px solid var(--line);background:var(--surface)
   <section class="view" id="v-painel">
     <div class="hero">
       <div>
-        <div class="eyebrow">Linguagem de Programação I · Prova P3</div>
-        <h1>Meta da prova: <em>10,0</em><br>sem depender de sorte.</h1>
+                <h1>Meta da prova: <em>10,0</em><br>sem depender de sorte.</h1>
         <p>Cada resposta passa pela checagem automática dos critérios que zeram questão (verbo do enunciado, recursão sem laço, <code>malloc</code> completo, índices de 0 a n − 1) e por uma autoavaliação sua contra o gabarito. Uma questão só conta como dominada quando você tira 10.</p>
         <div class="hero-actions">
           <button class="btn primary" id="goTreino">Continuar treino</button>
@@ -414,7 +412,7 @@ select,input[type="date"]{border:1px solid var(--line);background:var(--surface)
   <!-- BANCO -->
   <section class="view" id="v-banco" hidden>
     <div class="toolbar" style="justify-content:space-between">
-      <div><div class="eyebrow">Banco de questões</div><h1 style="font-size:28px">Todas as questões do treino</h1></div>
+      <h1 style="font-size:28px">Banco de questões</h1>
       <button class="btn" id="btnReset">Zerar meu progresso</button>
     </div>
     <div id="resetConfirm" hidden class="box" style="margin-bottom:18px;border-color:var(--red)">
@@ -1843,7 +1841,7 @@ function renderSim(){
   const root=$('#simRoot');
   if(!S||S.fase==='inicio'){
     const hist=store.data.sims.slice(-5).reverse();
-    root.innerHTML=`<div class="sim-start"><div class="box"><div class="eyebrow">Simulado</div><h1 style="font-size:30px;margin:6px 0 12px">Prova P3 em 60 minutos</h1>
+    root.innerHTML=`<div class="sim-start"><div class="box"><h1 style="font-size:30px;margin:0 0 12px">Prova P3 em 60 minutos</h1>
       <ol class="rules" style="margin-bottom:18px"><li>6 questões de escrever função, uma de cada conteúdo.</li><li>Sem gabarito e sem correção até entregar, como na prova.</li><li>O cronômetro continua se você sair da página. Em 0:00 a prova é entregue sozinha.</li><li>Na entrega, a checagem automática corrige os critérios e você avalia cada resposta contra o gabarito. Depois sai o boletim.</li></ol>
       <button class="btn primary" id="simGo">Começar simulado</button></div>
       <div class="box"><h2>Simulados anteriores</h2><p class="sub">Média final de cada simulado.</p>${hist.length?`<ul class="rev-list">${hist.map(s=>`<li><button disabled style="cursor:default"><span class="tt">${new Date(s.ts).toLocaleDateString('pt-BR',{day:'2-digit',month:'short'})} · ${new Date(s.ts).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}</span><span class="note-chip ${s.media===10?'ten':''}">${fmt(s.media)}</span></button></li>`).join('')}</ul>`:'<p class="empty">Nenhum simulado feito ainda.</p>'}</div></div>`;
@@ -1872,7 +1870,7 @@ function renderSim(){
     const notas=S.qs.map(id=>notaDe(id)??0), media=notas.reduce((a,b)=>a+b,0)/notas.length;
     const tempo=Math.min(SIM_DUR,Math.floor(((S.fim||Date.now())-S.inicio)/1000));
     const titulo=pend?`Corrija sua prova: ${pend} ${pend===1?'questão aguarda':'questões aguardam'} sua autoavaliação.`:media>=10?'Gabaritou a prova.':media>=6?'Passaria, mas a meta é 10.':'Abaixo da média. Revise os conteúdos marcados.';
-    root.innerHTML=`<div class="boletim"><div class="bol-head">${gradeHTML(pend?null:Math.round(media*10)/10,pend?'média sai após a autoavaliação':'média do simulado')}<div style="flex:1;min-width:200px"><div class="eyebrow">Boletim</div><h2>${titulo}</h2><p class="muted" style="margin:6px 0 0">Tempo usado: ${Math.floor(tempo/60)} min · ${notas.filter(n=>n===10).length} de 6 questões com 10</p></div><div class="actions" style="margin:0"><button class="btn primary" id="simAgain">Novo simulado</button></div></div>
+    root.innerHTML=`<div class="boletim"><div class="bol-head">${gradeHTML(pend?null:Math.round(media*10)/10,pend?'média sai após a autoavaliação':'média do simulado')}<div style="flex:1;min-width:200px"><h2>${titulo}</h2><p class="muted" style="margin:6px 0 0">Tempo usado: ${Math.floor(tempo/60)} min · ${notas.filter(n=>n===10).length} de 6 questões com 10</p></div><div class="actions" style="margin:0"><button class="btn primary" id="simAgain">Novo simulado</button></div></div>
       ${S.qs.map((id,i)=>{ const q=QMAP[id], r=S.res[id], n=notaDe(id); const out=corrEscreverHTML(q,r.auto,r.self,S.codes[id]??'');
         return `<details class="bol-row" data-id="${id}" ${n==null||(S.aberto&&S.aberto===id)?'open':''}><summary><span class="tag">Q${i+1}</span><span class="tt">${esc(q.titulo)}<small>${esc(TOPICS[q.t].nome)}</small></span><span class="note-chip ${n===10?'ten':''}">${n==null?'?':fmt(n)}</span></summary><div class="correcao">${out.html}</div></details>`; }).join('')}</div>`;
     root.querySelectorAll('[data-slot="acts"]').forEach(s=>s.remove());
