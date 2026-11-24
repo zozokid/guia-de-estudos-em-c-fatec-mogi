@@ -1,5 +1,5 @@
 // Cache para funcionar offline. Troque a versão ao publicar mudanças grandes.
-const CACHE = 'guia-c-v1';
+const CACHE = 'guia-c-v2';
 const CORE = ['./', 'index.html', 'manifest.webmanifest', 'icon.svg', 'icon-180.png', 'icon-192.png', 'icon-512.png'];
 
 self.addEventListener('install', e => {

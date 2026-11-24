@@ -460,7 +460,7 @@ function hl(code){
 /* ============ conteúdos ============ */
 const TOPICS={
   malloc:{nome:'Alocação dinâmica',det:'malloc · int, float, struct'},
-  struct:{nome:'Structs',det:'por valor e por ponteiro'},
+  struct:{nome:'Structs',det:'valor, ponteiro e <string.h>'},
   recursao:{nome:'Iterativa × recursiva',det:'PA · PG · Fibonacci · fatorial · dígitos'},
   ponteiros:{nome:'Vetores',det:'percorrer · maior/menor · inverter'},
   strings:{nome:'Strings sem <string.h>',det:"'\\0' · copiar · comparar · palíndromo"},
@@ -512,6 +512,15 @@ struct Produto {
     char nome[30];
     float preco;
 };`;
+
+const PESSOA=RAW`
+#include <stdio.h>
+
+struct Pessoa {
+    char nome[30];
+    char sobrenome[30];
+};`;
+const INC_STR=tem(/#\s*include\s*<string\.h>/,'#include <string.h> para usar strcpy, strcmp, strlen, strcat.');
 
 const Q=[
 /* ---------- MALLOC ---------- */
@@ -791,6 +800,206 @@ void exibeAluno(struct Aluno a)
     printf("Media: %.2f\n", media);
 }`,bug:4,fix:'printf("Nome: %s\\n", a.nome);',
  exp:'a é uma struct (por valor), não um ponteiro. A seta -> só serve para ponteiro de struct; aqui o acesso é a.nome. Isso não compila.'},
+
+/* ---------- STRUCT + <string.h> ---------- */
+{id:'S9',t:'struct',k:'escrever',inc:true,titulo:'Cadastrar aluno com strcpy',
+ enun:'Usando <code>&lt;string.h&gt;</code>, crie uma função que recebe um <strong>ponteiro para struct Aluno</strong>, um nome e duas notas, e preenche todos os campos da struct.',
+ sig:'void cadastraAluno(struct Aluno *a, char *nome, float n1, float n2)',ctx:ALUNO,
+ main:RAW`
+int main()
+{
+    struct Aluno a;
+    cadastraAluno(&a, "Bia", 9.0, 7.0);
+    printf("%s %.1f %.1f", a.nome, a.n1, a.n2);   // Bia 9.0 7.0
+    return 0;
+}`,
+ ck:[INC_STR,tem(/\bstrcpy\s*\(/,'Copia o nome com strcpy (vetor de char não aceita =).',true),ck.seta,ck.semPrintf],
+ gab:RAW`
+#include <string.h>
+
+void cadastraAluno(struct Aluno *a, char *nome, float n1, float n2)
+{
+    strcpy(a->nome, nome);
+    a->n1 = n1;
+    a->n2 = n2;
+}`},
+{id:'S10',t:'struct',k:'escrever',inc:true,titulo:'Buscar aluno pelo nome',
+ enun:'Usando <code>&lt;string.h&gt;</code>, crie uma função que recebe um vetor de <strong>n struct Aluno</strong> e um nome, e <strong>retorna o índice</strong> do aluno com esse nome, ou <strong>-1</strong> se não existir.',
+ sig:'int buscaAluno(struct Aluno *v, int n, char *nome)',ctx:ALUNO,
+ main:RAW`
+int main()
+{
+    struct Aluno t[3] = {{"Ana", 8, 6}, {"Caio", 3, 5}, {"Lia", 6, 6}};
+    printf("%d %d", buscaAluno(t, 3, "Caio"), buscaAluno(t, 3, "Rui"));   // 1 -1
+    return 0;
+}`,
+ ck:[INC_STR,tem(/\bstrcmp\s*\(/,'Compara nomes com strcmp (nunca com ==).',true),tem(/strcmp\s*\([^;]*\)\s*==\s*0|!\s*strcmp\s*\(/,'Testa strcmp(...) == 0 para nomes iguais.'),tem(/return\s+-\s*1\s*;/,'Retorna -1 quando não encontra.'),ck.comLaco,ck.semPrintf],
+ gab:RAW`
+#include <string.h>
+
+int buscaAluno(struct Aluno *v, int n, char *nome)
+{
+    for (int i = 0; i < n; i++)
+        if (strcmp(v[i].nome, nome) == 0)
+            return i;
+    return -1;
+}`},
+{id:'S11',t:'struct',k:'escrever',inc:true,titulo:'Produtos com nome longo',
+ enun:'Usando <code>&lt;string.h&gt;</code>, crie uma função que recebe um vetor de <strong>n struct Produto</strong> e um tamanho, e <strong>exibe na tela</strong> o nome dos produtos cujo nome tem mais caracteres que esse tamanho.',
+ sig:'void exibeNomesLongos(struct Produto *v, int n, int tam)',ctx:PROD,
+ main:RAW`
+int main()
+{
+    struct Produto v[3] = {{1, "Lapis", 1.5}, {2, "Mochila escolar", 120}, {3, "Regua", 4}};
+    exibeNomesLongos(v, 3, 6);   // Mochila escolar
+    return 0;
+}`,
+ ck:[INC_STR,ck.exibe,ck.comLaco,tem(/\bstrlen\s*\(/,'Mede o nome com strlen.',true),tem(/strlen\s*\([^;]*\)\s*>\s*tam|tam\s*<\s*strlen/,'Compara strlen(nome) > tam.')],
+ gab:RAW`
+#include <string.h>
+
+void exibeNomesLongos(struct Produto *v, int n, int tam)
+{
+    for (int i = 0; i < n; i++)
+        if (strlen(v[i].nome) > tam)
+            printf("%s\n", v[i].nome);
+}`},
+{id:'S12',t:'struct',k:'escrever',inc:true,titulo:'Exibir o maior nome',
+ enun:'Usando <code>&lt;string.h&gt;</code>, crie uma função que recebe um vetor de <strong>n struct Aluno</strong> e <strong>exibe na tela</strong> o nome com mais caracteres e a quantidade de caracteres dele.',
+ sig:'void exibeMaiorNome(struct Aluno *v, int n)',ctx:ALUNO,
+ main:RAW`
+int main()
+{
+    struct Aluno t[3] = {{"Ana", 8, 6}, {"Gabriela", 3, 5}, {"Lia", 6, 6}};
+    exibeMaiorNome(t, 3);   // Gabriela - 8
+    return 0;
+}`,
+ ck:[INC_STR,ck.exibe,ck.comLaco,tem(/\bstrlen\s*\(/,'Mede os nomes com strlen.',true)],
+ gab:RAW`
+#include <string.h>
+
+void exibeMaiorNome(struct Aluno *v, int n)
+{
+    int pos = 0;
+    for (int i = 1; i < n; i++)
+        if (strlen(v[i].nome) > strlen(v[pos].nome))
+            pos = i;
+    printf("%s - %d\n", v[pos].nome, (int) strlen(v[pos].nome));
+}`},
+{id:'S13',t:'struct',k:'escrever',inc:true,titulo:'Ordenar alunos por nome',
+ enun:'Usando <code>&lt;string.h&gt;</code>, crie uma função que <strong>ordena em ordem alfabética</strong> um vetor de <strong>n struct Aluno</strong> pelo campo nome.',
+ sig:'void ordenaPorNome(struct Aluno *v, int n)',ctx:ALUNO,
+ main:RAW`
+int main()
+{
+    struct Aluno t[3] = {{"Lia", 6, 6}, {"Ana", 8, 6}, {"Caio", 3, 5}};
+    ordenaPorNome(t, 3);   // Ana, Caio, Lia
+    return 0;
+}`,
+ ck:[INC_STR,tem(/\bstrcmp\s*\(/,'Compara nomes com strcmp.',true),tem(/strcmp\s*\([^;]*\)\s*>\s*0|0\s*<\s*strcmp/,'Troca quando strcmp(...) > 0.'),tem(/struct\s+Aluno\s+\w+\s*;/,'Usa uma struct Aluno auxiliar para a troca.'),ck.semPrintf],
+ gab:RAW`
+#include <string.h>
+
+void ordenaPorNome(struct Aluno *v, int n)
+{
+    struct Aluno aux;
+    for (int i = 0; i < n - 1; i++)
+        for (int j = 0; j < n - 1 - i; j++)
+            if (strcmp(v[j].nome, v[j + 1].nome) > 0)
+            {
+                aux = v[j];
+                v[j] = v[j + 1];
+                v[j + 1] = aux;
+            }
+}`},
+{id:'S14',t:'struct',k:'escrever',inc:true,titulo:'Nome completo com strcat',
+ enun:'Usando <code>&lt;string.h&gt;</code>, crie uma função que recebe um <strong>ponteiro para struct Pessoa</strong> e monta em <code>destino</code> o nome completo: nome, um espaço e sobrenome.',
+ sig:'void nomeCompleto(struct Pessoa *p, char *destino)',ctx:PESSOA,
+ main:RAW`
+int main()
+{
+    struct Pessoa p = {"Ada", "Lovelace"};
+    char completo[61];
+    nomeCompleto(&p, completo);
+    printf("%s", completo);   // Ada Lovelace
+    return 0;
+}`,
+ ck:[INC_STR,tem(/\bstrcpy\s*\(\s*destino/,'Começa com strcpy(destino, ...).',true),tem(/\bstrcat\s*\(/,'Junta as partes com strcat.',true),ck.seta,ck.semPrintf],
+ gab:RAW`
+#include <string.h>
+
+void nomeCompleto(struct Pessoa *p, char *destino)
+{
+    strcpy(destino, p->nome);
+    strcat(destino, " ");
+    strcat(destino, p->sobrenome);
+}`},
+{id:'S15',t:'struct',k:'completar',titulo:'Funções de <string.h> na struct',
+ enun:'Complete com a biblioteca e as funções certas de <string.h>.',
+ code:RAW`
+#include <stdio.h>
+#include ⟦<string.h>⟧
+
+struct Aluno {
+    char nome[50];
+    float n1, n2;
+};
+
+void cadastra(struct Aluno *a, char *nome)
+{
+    ⟦strcpy⟧(a->nome, nome);
+}
+
+int mesmoNome(struct Aluno a, struct Aluno b)
+{
+    if (⟦strcmp⟧(a.nome, b.nome) == ⟦0⟧) return 1;
+    return 0;
+}
+
+int tamanhoNome(struct Aluno a)
+{
+    return ⟦strlen⟧(a.nome);
+}
+
+void sobrenome(struct Aluno *a, char *sob)
+{
+    strcat(a->nome, " ");
+    ⟦strcat⟧(a->nome, sob);
+}`,
+ exp:'strcpy(destino, origem) copia uma string; strcmp(a, b) devolve 0 quando são iguais (negativo ou positivo pela ordem alfabética); strlen(s) conta os caracteres sem o \'\\0\'; strcat(destino, origem) junta origem ao fim de destino. Todas exigem #include <string.h>.'},
+{id:'S16',t:'struct',k:'erro',titulo:'Atribuição em vetor de char',
+ enun:'A função deveria preencher a struct apontada por a. Clique na linha com o erro.',
+ code:RAW`
+void cadastra(struct Aluno *a)
+{
+    a->nome = "Ana";
+    a->n1 = 7.5;
+    a->n2 = 8.0;
+}`,bug:3,fix:'strcpy(a->nome, "Ana");',
+ exp:'nome é um vetor de char (char nome[50]), e vetor não pode receber atribuição com =. Isso nem compila. Para colocar texto num vetor de char use strcpy, com #include <string.h>.'},
+{id:'S17',t:'struct',k:'erro',titulo:'strcmp usado como verdadeiro/falso',
+ enun:'A função deveria retornar o índice do aluno com o nome procurado, ou -1. Clique na linha com o erro.',
+ code:RAW`
+int buscaAluno(struct Aluno *v, int n, char *nome)
+{
+    for (int i = 0; i < n; i++)
+        if (strcmp(v[i].nome, nome))
+            return i;
+    return -1;
+}`,bug:4,fix:'if (strcmp(v[i].nome, nome) == 0)',
+ exp:'strcmp devolve 0 quando as strings são IGUAIS. Usado direto no if, o teste é verdadeiro justamente quando os nomes são diferentes, e a função retorna o primeiro aluno que não é o procurado.'},
+{id:'S18',t:'struct',k:'erro',titulo:'Comparando nomes com ==',
+ enun:'A função deveria contar quantos produtos têm o nome procurado. Clique na linha com o erro.',
+ code:RAW`
+int contaProduto(struct Produto *v, int n, char *nome)
+{
+    int cont = 0;
+    for (int i = 0; i < n; i++)
+        if (v[i].nome == nome)
+            cont++;
+    return cont;
+}`,bug:5,fix:'if (strcmp(v[i].nome, nome) == 0)',
+ exp:'Com == o C compara os ENDEREÇOS dos dois vetores, não o texto. Os endereços são sempre diferentes, então a função retorna 0. Para comparar o conteúdo use strcmp(...) == 0.'},
 
 /* ---------- RECURSÃO / ITERAÇÃO ---------- */
 {id:'R1',t:'recursao',k:'escrever',titulo:'Fatorial iterativo',
@@ -1592,7 +1801,7 @@ function specHTML(q){
     <div><span class="k">Nome</span><code>${esc(nome)}</code></div>
     <div><span class="k">Recebe</span><ul>${ps.join('')}</ul></div>
     <div><span class="k">Retorno</span>${ret==='void'?'<span class="muted">deduza pelo verbo do enunciado</span>':`<code>${esc(ret.replace(/\s*\*$/,' *'))}</code>`}</div>
-    ${q.lib?'<div><span class="k">Atenção</span><span class="muted">inclua a biblioteca necessária</span></div>':''}
+    ${q.lib||q.inc?'<div><span class="k">Atenção</span><span class="muted">inclua a biblioteca necessária</span></div>':''}
   </div><p class="muted" style="font-size:13.5px;margin:10px 0 0">Escreva a função completa, como na prova: assinatura, chaves e corpo.</p>`;
 }
 function benchHTML(q){
